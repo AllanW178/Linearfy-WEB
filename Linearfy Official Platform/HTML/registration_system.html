@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg">
+    <link rel="stylesheet" href="/CSS/regist_css.css">
+
+    <title>Linearfy</title>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="form-container">
+
+            <div id="signup-div" class="form-content">
+                <div class="form-header">
+                    <div class="logo-box">
+                        <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+                    </div>
+                    <h2>Join Linearfy</h2>
+                    <p>Create your account to get started</p>
+                </div>
+
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="John Doe">
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="you@example.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+
+                <button class="main-btn">Sign Up</button>
+
+                <div class="form-footer">
+                    Already have an account? <span class="switch-link" onclick="switchForm()">Sign in</span>
+                </div>
+            </div>
+
+            <div id="signin-div" class="form-content" style="display: none;">
+                <div class="form-header">
+                    <div class="logo-box">
+                        <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+                    </div>
+                    <h2>Welcome to Linearfy</h2>
+                    <p>Sign in to your account to continue</p>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" placeholder="you@example.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+
+                <button class="main-btn">Sign In</button>
+
+                <div class="form-footer">
+                    Don't have an account? <span class="switch-link" onclick="switchForm()">Sign up</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="/JS/regist_js.js"></script>
+</body>
+</html>
