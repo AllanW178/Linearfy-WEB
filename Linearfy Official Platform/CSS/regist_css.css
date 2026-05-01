@@ -19,6 +19,7 @@ img {
     image-rendering: auto;
     object-fit: cover;
     object-position: 50% 50%;
+    flex-shrink: 0;
 }
 
 .page-wrapper {
@@ -392,8 +393,7 @@ img {
 .ri-search-2-line,
 .ri-team-line,
 .ri-store-2-line,
-.ri-question-mark,
-.ri-settings-3-line {
+.ri-question-mark {
     font-size: 1.2rem;
 }
 
@@ -416,12 +416,11 @@ img {
     width: 90%;
     height: 78px;
     padding: 12px;
-    gap: 10px;
+    gap: 5px;
     background-color: #ffffff;
     border: 1px solid rgb(224, 224, 224);
     border-radius: 20px;
     box-shadow: 0 5px 4px rgba(0, 0, 0, 0.04);
-
 }
 
 .user-vital-profile-info-ui img {
@@ -429,6 +428,8 @@ img {
     height: 35px;
     border-radius: 50%;
     border: 1px solid rgb(224, 224, 224);
+    -webkit-user-drag: none;
+    -moz-window-dragging: none;
 }
 
 .right-side-user-profile-content {
@@ -438,6 +439,8 @@ img {
     align-items: flex-start;
     height: 100%;
     width: fit-content;
+    word-break: break-all;
+    margin: 0 5px 0 5px;
 }
 
 .user-displayname-detail {
@@ -447,7 +450,7 @@ img {
 }
 
 .user-username-detail {
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     font-style: italic;
     font-weight: 500;
     cursor: pointer;
@@ -459,11 +462,22 @@ img {
 }
 
 .ri-settings-3-line {
-    border: 1px solid black;
-    width: 30px;
-    height: 100%;
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+    color: #383838;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: transparent;
+    border-radius: 50%;
+    flex-shrink: 0;
+    cursor: pointer;
+
+    transition: background-color 0.20s ease-out;
+}
+
+.ri-settings-3-line:hover {
+    background-color: #f3f4f6;
 }
 
