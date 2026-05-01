@@ -1,4 +1,3 @@
-
 /* Just ensuring that we use 'box-sizing' for better web designs. And I have picked a specific font for Linearfy. */
 * {
     margin: 0;
@@ -9,14 +8,30 @@
 
 body {
     background-color: #eef2ff;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+img {
+    image-rendering: auto;
+    object-fit: cover;
+    object-position: 50% 50%;
 }
 
 .page-wrapper {
     height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: fixed;
+    z-index: 5;
+    top: 0;
+    left: 0;
+    background-color: rgb(233, 249, 255);
 }
 
 .form-container {
@@ -35,6 +50,15 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+.pop-out-animation {
+    animation: smooth-pop-out 0.5s ease;
+}
+
+@keyframes smooth-pop-out {
+    0% { opacity: 1; transform: scale(1.0) }
+    100% { opacity: 0; transform: scale(0.95) }
 }
 
 
@@ -134,3 +158,312 @@ body {
 .switch-link:hover {
     text-decoration: underline;
 }
+
+.input-group label,
+.form-header h2, p,
+.main-btn,
+.form-footer,
+.logo-box img {
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+
+/* Main contents for Linearfy */
+.linearfy-main-content-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.pop-up-ui {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(1.1px);
+    animation: smoothPopIn 0.15s ease-in-out;
+}
+
+@keyframes smoothPopIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.90);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.0);
+    }
+}
+
+
+.inner-notification-ui {
+    max-width: 30%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+    background-color: rgb(253, 253, 253);
+    font-size: 1.0rem;
+    border: 1px solid rgb(231, 231, 231);
+    gap: 12px;
+    flex-direction: column;
+    padding: 15px;   
+}
+
+.inner-notification-ui img {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+.reminder-text-content {
+    font-size: 0.9rem;
+    font-weight: 450;
+    margin-bottom: 15px;
+}
+
+.confirm-action-btn {
+    background-color: #000000;
+    border-radius: 30px;
+    border: 1px solid #000000;
+    padding: 5px 15px;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.confirm-action-btn:hover {
+    background-color: rgb(41, 41, 41);
+}
+
+.confirmation-text-btn,
+.ri-arrow-right-line {
+    font-size: 0.9rem;
+    color: #f1f1f1;
+    font-weight: 500;
+    height: 100%;
+}
+
+.linearfy-main-content-page {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    height: 100vh;
+    width: 100vw;
+    background-color: #ffffff;
+
+}
+
+.left-navigation-sidebar {
+    border-right: 1px solid rgb(224, 224, 224);
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.right-side-content {
+    height: 100%;
+    background-color: #fafafa;
+    padding: 20px;
+
+    /* TEMPORARY DEBUGGING FOR THE RIGHT SIDE, CORRESPONDING CONTENT */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.top-app-icon-section {
+    border-bottom: 1px solid rgb(224, 224, 224);
+    padding: 10px;
+    height: 70px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 0 15px 0 20px;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.top-app-icon-section img {
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+    border: 1px solid #f1f1f1;
+    -moz-window-dragging: none;
+    -webkit-user-drag: none;
+
+}
+
+.right-side-app-icon-content {
+    display: flex;
+    flex-grow: 1;
+    height: fit-content;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.app-text {
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.app-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+}
+
+
+
+
+
+.selected-nav-btn-background {
+    background-color: rgb(233, 243, 248);
+}
+
+.selected-nav-btn-text-color {
+    color: purple;
+}
+
+.left-navigation-bottom-section {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.list-of-linearfy-navigation-action-btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    height: fit-content;
+    padding: 10px
+}
+
+.linearfy-center-nav-btn,
+.linearfy-product-discovery-nav-btn,
+.linearfy-community-exploration-nav-btn,
+.linearfy-merchant-hub-nav-btn,
+.linearfy-support-services-nav-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 42px;
+    padding: 5px 10px;
+    gap: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    
+    transition: background-color 0.20s ease-in;
+}
+
+.linearfy-center-nav-btn:hover,
+.linearfy-product-discovery-nav-btn:hover,
+.linearfy-community-exploration-nav-btn:hover,
+.linearfy-merchant-hub-nav-btn:hover,
+.linearfy-support-services-nav-btn:hover {
+    background-color: rgb(233, 243, 248);
+}
+
+.ri-home-office-line,
+.ri-search-2-line,
+.ri-team-line,
+.ri-store-2-line,
+.ri-question-mark,
+.ri-settings-3-line {
+    font-size: 1.2rem;
+}
+
+.nav-text-content {
+    color: #383838;
+    font-size: 0.90rem;
+    letter-spacing: 0.4px;
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+}
+
+
+
+.user-vital-profile-info-ui {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    width: 90%;
+    height: 78px;
+    padding: 12px;
+    gap: 10px;
+    background-color: #ffffff;
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 20px;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.04);
+
+}
+
+.user-vital-profile-info-ui img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 1px solid rgb(224, 224, 224);
+}
+
+.right-side-user-profile-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    width: fit-content;
+}
+
+.user-displayname-detail {
+    font-size: 0.9rem;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+}
+
+.user-username-detail {
+    font-size: 0.82rem;
+    font-style: italic;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.4px;
+}
+
+.user-username-detail:hover {
+    text-decoration: underline;
+}
+
+.ri-settings-3-line {
+    border: 1px solid black;
+    width: 30px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
