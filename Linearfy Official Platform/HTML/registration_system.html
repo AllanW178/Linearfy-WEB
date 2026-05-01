@@ -8,12 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <link rel="icon" href="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg">
-    <link rel="stylesheet" href="/CSS/regist_css.css">
+    <link rel="stylesheet" href="/CSS/Regist_CSS.css">
 
     <title>Linearfy</title>
 </head>
 <body>
-    <div class="page-wrapper">
+    <div class="page-wrapper" id="registration-container-ui">
         <div class="form-container">
 
             <div id="signup-div" class="form-content">
@@ -27,20 +27,25 @@
 
                 <div class="input-group">
                     <label>Full Name</label>
-                    <input type="text" placeholder="John Doe">
+                    <input id="regist-full-name-critical-info" type="text" maxlength="12" placeholder="John Doe">
                 </div>
 
                 <div class="input-group">
                     <label>Email</label>
-                    <input type="email" placeholder="you@example.com">
+                    <input id="regist-email-critical-info" type="email" placeholder="you@example.com">
                 </div>
 
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" placeholder="••••••••">
+                    <input id="regist-password-critical-info" type="password" placeholder="••••••••">
                 </div>
 
-                <button class="main-btn">Sign Up</button>
+                <div class="input-group">
+                    <label>Repeat Password</label>
+                    <input id="login-password-critical-info-repeat" type="password" placeholder="••••••••">
+                </div>
+
+                <button class="main-btn" id="sign-up-account-action-btn">Sign Up</button>
 
                 <div class="form-footer">
                     Already have an account? <span class="switch-link" onclick="switchForm()">Sign in</span>
@@ -58,15 +63,15 @@
 
                 <div class="input-group">
                     <label>Email</label>
-                    <input type="email" placeholder="you@example.com">
+                    <input id="login-email-critical-info" type="email" placeholder="you@example.com">
                 </div>
 
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" placeholder="••••••••">
+                    <input id="login-password-critical-info" type="password" placeholder="••••••••">
                 </div>
 
-                <button class="main-btn">Sign In</button>
+                <button class="main-btn" id="sign-in-account-action-btn">Sign In</button>
 
                 <div class="form-footer">
                     Don't have an account? <span class="switch-link" onclick="switchForm()">Sign up</span>
@@ -76,7 +81,78 @@
         </div>
     </div>
 
+    <div class="linearfy-main-content-page" id="main-linearfy-page">
+        <div class="left-navigation-sidebar">
+            <div class="top-app-icon-section">
+                <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+                <div class="right-side-app-icon-content">
+                    <span class="app-text">App Name<span>
+                    <p class="app-name">Welcome to Linearfy</p>
+                </div>
+            </div>
 
-    <script src="/JS/regist_js.js"></script>
+            <div class="left-navigation-bottom-section">
+                <div class="list-of-linearfy-navigation-action-btns">
+                    <div class="linearfy-center-nav-btn nav-btn selected-nav-btn-background" data-target="center-page">
+                        <i class="ri-home-office-line"></i>
+                        <span class="nav-text-content">Linearfy Center</span>
+                    </div>
+
+                    <div class="linearfy-product-discovery-nav-btn nav-btn" data-target="pd-page">
+                        <i class="ri-search-2-line"></i>
+                        <span class="nav-text-content">Product Discovery</span>
+                    </div>
+
+                    <div class="linearfy-community-exploration-nav-btn nav-btn" data-target="ce-page">
+                        <i class="ri-team-line"></i>
+                        <span class="nav-text-content">Commmunity Exploration</span>
+                    </div>
+
+                    <div class="linearfy-merchant-hub-nav-btn nav-btn" data-target="mh-page">
+                        <i class="ri-store-2-line"></i>
+                        <span class="nav-text-content">Merchant Hub</span>
+                    </div>
+
+                    <div class="linearfy-support-services-nav-btn nav-btn" data-target="ss-page">
+                        <i class="ri-question-mark"></i>
+                        <span class="nav-text-content">Support Services</span>
+                    </div>
+                </div>
+
+                <div class="user-vital-profile-info-ui">
+                    <img src="/LINEARFY_IMG_ASSETS/Default_User_PFP.jpg" alt="Profile Picture">
+                    <div class="right-side-user-profile-content">
+                        <p class="user-displayname-detail">user0221</p>
+                        <span class="user-username-detail">@registered_user0221</span>
+                    </div>
+                    <i class="ri-settings-3-line"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-side-content">
+            <div class="center-page-section crucial-content-page" id="center-page">
+                ( DEBUGGING: CENTER )
+            </div>
+
+            <div class="product-discovery-page-section crucial-content-page" id="pd-page">
+                ( DEBUGGING: PRODUCT DISCOVERY )
+            </div>
+
+            <div class="commmunity-exploration-page-section crucial-content-page" id="ce-page">
+                ( DEBUGGING: COMMUNITY EXPLORATION )
+            </div>
+
+            <div class="merchant-hub-page-section crucial-content-page" id="mh-page">
+                ( DEBUGGING: MERCHANT HUB )
+            </div>
+
+            <div class="support-services-page-section crucial-content-page" id="ss-page">
+                (DEBUGGING: SUPPORT SERVICES )
+            </div>
+        </div>
+    </div>
+
+    <script src="/JS/Regist_JS.js"></script>
 </body>
 </html>
