@@ -1,17 +1,17 @@
-// We firstly build a simple UI switching.
 function switchForm() {
-    let signUpDiv = document.getElementById("signup-div");
-    let signInDiv = document.getElementById("signin-div");
+    let signUpDiv = document.getElementById("signup-wrapper");
+    let signInDiv = document.getElementById("signin-wrapper");
 
-    if (signUpDiv.style.display !== "none") {
+    // If sign-in is hidden, show it and hide sign-up
+    if (signInDiv.style.display === "none" || signInDiv.style.display === "") {
+        signInDiv.style.display = "flex"; 
         signUpDiv.style.display = "none";
-        signInDiv.style.display = "block";
-
     } else {
         signInDiv.style.display = "none";
-        signUpDiv.style.display = "block";
+        signUpDiv.style.display = "flex";
     }
 }
+
 
 // ======================================================= //
 
@@ -173,5 +173,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const settingsIcon = document.querySelector("#user-setting-action-btn");
+    const signOutBtn = document.querySelector(".user-sign-out-action-btn");
+
+    settingsIcon.addEventListener("click", function() {
+        if (signOutBtn.style.display === "none" || signOutBtn.style.display === "") {
+            signOutBtn.style.display = "flex";
+        } else {
+            signOutBtn.style.display = "none";
+        }
+    });
+
+});
+
 
 
