@@ -16,69 +16,93 @@
     <div class="page-wrapper" id="registration-container-ui">
         <div class="form-container">
 
-            <div id="signup-div" class="form-content">
-                <div class="form-header">
-                    <div class="logo-box">
-                        <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+            <div class="signup-regist-container-box" id="signup-wrapper">
+                <div id="signup-div" class="form-content">
+                    <div class="form-header">
+                        <div class="logo-box">
+                            <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+                        </div>
+                        <h2>Join Linearfy</h2>
+                        <p>Create your account to get started</p>
                     </div>
-                    <h2>Join Linearfy</h2>
-                    <p>Create your account to get started</p>
+
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input id="regist-full-name-critical-info" type="text" maxlength="12" placeholder="John Doe">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input id="regist-email-critical-info" type="email" placeholder="you@example.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input id="regist-password-critical-info" type="password" placeholder="••••••••">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Repeat Password</label>
+                        <input id="login-password-critical-info-repeat" type="password" placeholder="••••••••">
+                    </div>
+
+                    <button class="main-btn" id="sign-up-account-action-btn">Sign Up</button>
+
+                    <div class="form-footer">
+                        Already have an account? <span class="switch-link" onclick="switchForm()">Sign in</span>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Full Name</label>
-                    <input id="regist-full-name-critical-info" type="text" maxlength="12" placeholder="John Doe">
+                <div class="right-regist-welcome-info-ui">
+                    <h1>Linearfy...</h1>
+                    <span class="regist-welcome-text">Nice to meet you! Let's login to get you signed up.</span>
+
+                    <span class="circle1"></span>
+                    <span class="circle2"></span>
+                    <span class="square1"></span>
                 </div>
 
-                <div class="input-group">
-                    <label>Email</label>
-                    <input id="regist-email-critical-info" type="email" placeholder="you@example.com">
-                </div>
-
-                <div class="input-group">
-                    <label>Password</label>
-                    <input id="regist-password-critical-info" type="password" placeholder="••••••••">
-                </div>
-
-                <div class="input-group">
-                    <label>Repeat Password</label>
-                    <input id="login-password-critical-info-repeat" type="password" placeholder="••••••••">
-                </div>
-
-                <button class="main-btn" id="sign-up-account-action-btn">Sign Up</button>
-
-                <div class="form-footer">
-                    Already have an account? <span class="switch-link" onclick="switchForm()">Sign in</span>
-                </div>
             </div>
 
-            <div id="signin-div" class="form-content" style="display: none;">
-                <div class="form-header">
-                    <div class="logo-box">
-                        <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+            <div class="signin-regist-container-box" id="signin-wrapper" style="display: none;">
+                <div id="signin-div" class="form-content">
+                    <div class="form-header">
+                        <div class="logo-box">
+                            <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+                        </div>
+                        <h2>Welcome to Linearfy</h2>
+                        <p>Sign in to your account to continue</p>
                     </div>
-                    <h2>Welcome to Linearfy</h2>
-                    <p>Sign in to your account to continue</p>
+
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input id="login-email-critical-info" type="email" placeholder="you@example.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input id="login-password-critical-info" type="password" placeholder="••••••••">
+                    </div>
+
+                    <button class="main-btn" id="sign-in-account-action-btn">Sign In</button>
+
+                    <div class="form-footer">
+                        Don't have an account? <span class="switch-link" onclick="switchForm()">Sign up</span>
+                    </div>
                 </div>
 
-                <div class="input-group">
-                    <label>Email</label>
-                    <input id="login-email-critical-info" type="email" placeholder="you@example.com">
-                </div>
+                <div class="right-login-welcome-info-ui">
+                    <h1>Linearfy...</h1>
+                    <span class="regist-welcome-text">What do you want to shop today? Any plan for the shopping list?</span>
 
-                <div class="input-group">
-                    <label>Password</label>
-                    <input id="login-password-critical-info" type="password" placeholder="••••••••">
-                </div>
-
-                <button class="main-btn" id="sign-in-account-action-btn">Sign In</button>
-
-                <div class="form-footer">
-                    Don't have an account? <span class="switch-link" onclick="switchForm()">Sign up</span>
+                    <span class="circle1"></span>
+                    <span class="circle2"></span>
+                    <span class="square1"></span>
                 </div>
             </div>
 
         </div>
+
     </div>
 
     <div class="linearfy-main-content-page" id="main-linearfy-page">
@@ -125,18 +149,271 @@
                         <p class="user-displayname-detail">user0221</p>
                         <span class="user-username-detail">@registered_user0221</span>
                     </div>
-                    <i class="ri-settings-3-line"></i>
+                    <div class="settings-ui-functionality">
+                        <i class="ri-settings-3-line" id="user-setting-action-btn"></i>
+                        <div style="display: none;" class="user-sign-out-action-btn">
+                            <div class="user-pfp-info-btn">
+                                <i class="ri-user-line"></i>
+                                <span class="user-other-options-text">Profile</span>
+                            </div>
+
+                            <div class="user-personal-security-btn">
+                                <i class="ri-lock-password-line"></i>
+                                <span class="user-other-options-text">Password/<br>Security</span>
+                            </div>
+
+                            <div class="user-account-settings-btn">
+                                <i class="ri-user-follow-fill"></i>
+                                <span class="user-other-options-text">Account Settings</span>
+                            </div>
+
+                            <div class="user-log-out-btn">
+                                <i class="ri-corner-up-right-fill"></i>
+                                <span class="user-other-options-text">Log Out</span>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="right-side-content">
             <div class="center-page-section crucial-content-page" id="center-page">
-                ( DEBUGGING: CENTER )
+                <div class="top-page-title-and-description">
+                    <div class="page-title-content">
+                        <span>Linearfy Center</span>
+                    </div>
+                    <div class="page-description-content">
+                        <span>Welcome back! Here's what's happening with your store today.</span>
+                    </div>
+                </div>
+
+                <div class="financial-section-displayer">
+                    <div class="sales-container">
+                        <div class="total-sales-box">
+                            <span>Total Sales</span>
+                            <i class="ri-hand-coin-line"></i>
+                        </div>
+
+                        <div class="total-sales-actual-values">
+                            <span id="last-month-sales-cal">$0</span>
+                            <p id="last-month-of-percentages-increase-sales">0% from last month</p>
+                        </div>
+                    </div>
+
+                    <div class="active-products-container">
+                        <div class="total-active-products-box">
+                            <span>Active Products</span>
+                            <i class="ri-box-2-line"></i>
+                        </div>
+
+                        <div class="total-active-products-actual-values">
+                            <span id="last-month-active-products-cal">0</span>
+                            <p id="last-month-of-percentages-increase-products">0% from last month</p>
+                        </div>
+                    </div>
+
+                    <div class="total-customers-container">
+                        <div class="total-customers-box">
+                            <span>Total Customers</span>
+                            <i class="ri-group-3-line"></i>
+                        </div>
+
+                        <div class="total-customers-actual-values">
+                            <span id="last-month-customers-cal">0</span>
+                            <p id="last-month-of-percentages-increase-customers">0% from last month</p>
+                        </div>
+                    </div>
+
+                    <div class="total-conversion-container">
+                        <div class="total-conversion-box">
+                            <span>Conversion Rate</span>
+                            <i class="ri-exchange-2-line"></i>
+                        </div>
+
+                        <div class="total-conversion-actual-values">
+                            <span id="last-month-conversion-cal">0%</span>
+                            <p id="last-month-of-percentages-increase-conversion">0% from last month</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="on-sale-products-display-section">
+                    <div class="popular-products-left-ui">
+                        <div class="main-title-pp-text">
+                            <p>Popular Products</p>
+                            <span>Top performing products this month</span>
+                        </div>
+
+                        <div class="waitlist-sales-products-for-filling" id="popular-products-append-area">
+                            Waitlist...
+                        </div>
+                    </div>
+
+                    <div class="recent-activities-right-ui">
+                        <div class="main-title-pp-text">
+                            <p>Recent Activities</p>
+                            <span>Latest updates from your store</span>
+                        </div>
+
+                        <div class="waitlist-sales-products-for-filling" id="popular-products-append-area">
+                            Waitlist...
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="product-discovery-page-section crucial-content-page" id="pd-page">
-                ( DEBUGGING: PRODUCT DISCOVERY )
+                <div class="top-page-title-and-description">
+                    <div class="page-title-content">
+                        <span>Product Discovery</span>
+                    </div>
+                    <div class="page-description-content">
+                        <span>Explore trending products and discover new opportunities.</span>
+                    </div>
+                </div>
+
+                <div class="discovery-grid-container">
+                    <div class="trending-products-column">
+                        <div class="section-header">
+                            <p>Trending Products</p>
+                            <span>Hot items in your niche right now</span>
+                        </div>
+
+                        <div class="products-list-wrapper" id="trending-products-list">
+                            <div class="discovery-product-card">
+                                <div class="product-img-box">
+                                    <img src="/LINEARFY_IMG_ASSETS/Default_Product_Img.png" alt="N/A">
+                                </div>
+
+                                <div class="product-details-box">
+                                    <div class="product-main-info">
+                                        <p class="p-name">N/A (placeholder)</p>
+                                        <span class="p-category">Item description here...</span>
+                                    </div>
+                                    <div class="product-pricing-rating">
+                                        <span class="p-price">$0.00</span>
+                                        <span class="p-rating"><i class="ri-star-fill"></i> 0.0 (0)</span>
+                                    </div>
+                                </div>
+
+                                <div class="product-card-actions">
+                                    <div class="hot-badge"><span>Hot</span></div>
+                                    <div class="action-icons">
+                                        <i class="ri-heart-line"></i>
+                                        <i class="ri-eye-line"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="discovery-product-card">
+                                <div class="product-img-box">
+                                    <img src="/LINEARFY_IMG_ASSETS/Default_Product_Img.png" alt="N/A">
+                                </div>
+                                
+                                <div class="product-details-box">
+                                    <div class="product-main-info">
+                                        <p class="p-name">N/A (placeholder)</p>
+                                        <span class="p-category">Item description here...</span>
+                                    </div>
+                                    <div class="product-pricing-rating">
+                                        <span class="p-price">$0.00</span>
+                                        <span class="p-rating"><i class="ri-star-fill"></i> 0.0 (0)</span>
+                                    </div>
+                                </div>
+
+                                <div class="product-card-actions">
+                                    <div class="hot-badge"><span>Hot</span></div>
+                                    <div class="action-icons">
+                                        <i class="ri-heart-line"></i>
+                                        <i class="ri-eye-line"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="discovery-product-card">
+                                <div class="product-img-box">
+                                    <img src="/LINEARFY_IMG_ASSETS/Default_Product_Img.png" alt="N/A">
+                                </div>
+                                
+                                <div class="product-details-box">
+                                    <div class="product-main-info">
+                                        <p class="p-name">N/A (placeholder)</p>
+                                        <span class="p-category">Item description here...</span>
+                                    </div>
+                                    <div class="product-pricing-rating">
+                                        <span class="p-price">$0.00</span>
+                                        <span class="p-rating"><i class="ri-star-fill"></i> 0.0 (0)</span>
+                                    </div>
+                                </div>
+
+                                <div class="product-card-actions">
+                                    <div class="hot-badge"><span>Hot</span></div>
+                                    <div class="action-icons">
+                                        <i class="ri-heart-line"></i>
+                                        <i class="ri-eye-line"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="discovery-sidebar-column">
+                        <div class="sidebar-card categories-card">
+                            <div class="section-header">
+                                <p>Popular Categories</p>
+                                <span>Top performing product categories</span>
+                            </div>
+                            <ul class="category-list" id="popular-categories-list">
+                                <li>
+                                    <span class="cat-label"><span class="dot electronics"></span> Electronics</span>
+                                    <span class="cat-count">0 products</span>
+                                </li>
+
+                                <li>
+                                    <span class="cat-label"><span class="dot fashion"></span> Fashion</span>
+                                    <span class="cat-count">0 products</span>
+                                </li>
+
+                                <li>
+                                    <span class="cat-label"><span class="dot home-garden"></span> Home Garden</span>
+                                    <span class="cat-count">0 products</span>
+                                </li>
+
+                                <li>
+                                    <span class="cat-label"><span class="dot sports"></span> Sports</span>
+                                    <span class="cat-count">0 products</span>
+                                </li>
+
+                                <li>
+                                    <span class="cat-label"><span class="dot books"></span> Books</span>
+                                    <span class="cat-count">0 products</span>
+                                </li>
+
+                                <li>
+                                    <span class="cat-label"><span class="dot toys"></span> Toys</span>
+                                    <span class="cat-count">0 products</span>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div class="sidebar-card actions-card">
+                            <div class="section-header">
+                                <p>Quick Actions</p>
+                                <span>Manage your product discovery</span>
+                            </div>
+                            <div class="action-buttons-group">
+                                <button class="action-btn"><i class="ri-add-line"></i> Add to Import List</button>
+                                <button class="action-btn"><i class="ri-bar-chart-line"></i> View Analytics</button>
+                                <button class="action-btn"><i class="ri-heart-3-line"></i> Saved Products</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="commmunity-exploration-page-section crucial-content-page" id="ce-page">
