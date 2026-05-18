@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/regist_css.css') }}">
+    <title>Linearfy Dashboard</title>
+</head>
+<body>
+    <div class="linearfy-main-content-page" id="main-linearfy-page">
+        <div class="left-navigation-sidebar">
+            <div class="top-app-icon-section">
+                <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+                <div class="right-side-app-icon-content">
+                    <span class="app-text">App Name</span>
+                    <p class="app-name">Welcome to Linearfy</p>
+                </div>
+            </div>
+
+            <div class="left-navigation-bottom-section">
+                <div class="list-of-linearfy-navigation-action-btns">
+                    
+                    <a href="{{ url_for('center') }}" style="text-decoration: none; color: inherit; width: 100%;">
+                        <div class="linearfy-center-nav-btn nav-btn">
+                            <i class="ri-home-office-line"></i>
+                            <span class="nav-text-content">Linearfy Center</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('discovery') }}" style="text-decoration: none; color: inherit; width: 100%;">
+                        <div class="linearfy-product-discovery-nav-btn nav-btn">
+                            <i class="ri-search-2-line"></i>
+                            <span class="nav-text-content">Product Discovery</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('community') }}" style="text-decoration: none; color: inherit; width: 100%;">
+                        <div class="linearfy-community-exploration-nav-btn nav-btn">
+                            <i class="ri-team-line"></i>
+                            <span class="nav-text-content">Commmunity Exploration</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('merchant') }}" style="text-decoration: none; color: inherit; width: 100%;">
+                        <div class="linearfy-merchant-hub-nav-btn nav-btn">
+                            <i class="ri-store-2-line"></i>
+                            <span class="nav-text-content">Merchant Hub</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ url_for('support') }}" style="text-decoration: none; color: inherit; width: 100%;">
+                        <div class="linearfy-support-services-nav-btn nav-btn">
+                            <i class="ri-question-mark"></i>
+                            <span class="nav-text-content">Support Services</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="user-vital-profile-info-ui">
+                    <img src="/LINEARFY_IMG_ASSETS/Default_User_PFP.jpg" alt="Profile Picture">
+                    <div class="right-side-user-profile-content">
+                        <p class="user-displayname-detail">user0221</p>
+                        <span class="user-username-detail">@registered_user0221</span>
+                    </div>
+                    <div class="settings-ui-functionality">
+                        <i class="ri-settings-3-line" id="user-setting-action-btn"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-side-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+
+
+
+</body>
+</html>
