@@ -1757,13 +1757,14 @@ img {
 
 }
 
-
 #ss-page {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
     color: #333;
+
+
 }
 
 #ss-page .page-header {
@@ -1771,14 +1772,18 @@ img {
     flex-direction: column;
     gap: 6px;
     margin-bottom: 25px;
+
 }
+
 
 #ss-page .page-header h1 {
     font-size: 1.65rem;
     font-weight: 550;
     letter-spacing: 0.65px;
     color: #111827;
+
 }
+
 
 #ss-page .page-header p {
     font-size: 0.98rem;
@@ -1789,7 +1794,9 @@ img {
 #ss-page .search-container {
     width: 100%;
     margin-bottom: 25px;
+
 }
+
 
 #ss-page .search-input-wrapper {
     display: flex;
@@ -1798,6 +1805,8 @@ img {
     border: 1px solid #e5e7eb;
     border-radius: 12px;
     padding: 16px 24px;
+
+
 }
 
 #ss-page .search-icon {
@@ -1806,6 +1815,7 @@ img {
     background-color: #d1d5db;
     border-radius: 4px;
     flex-shrink: 0;
+
 }
 
 #ss-page .search-input-wrapper input {
@@ -1814,12 +1824,14 @@ img {
     width: 100%;
     margin-left: 16px;
     font-size: 0.95rem;
+
     background: transparent;
     color: #374151;
 }
 
 #ss-page .search-input-wrapper input::placeholder {
     color: #9ca3af;
+
 }
 
 #ss-page .categories-container {
@@ -1843,11 +1855,14 @@ img {
     cursor: pointer;
     transition: all 0.2s ease;
     min-width: 100px;
+
 }
 
 #ss-page .category-card:hover {
     border-color: #d1d5db;
     background-color: #f9fafb;
+
+
 }
 
 #ss-page .cat-icon {
@@ -1856,6 +1871,8 @@ img {
     background-color: #e5e7eb;
     border-radius: 8px;
     margin-bottom: 16px;
+
+
 }
 
 #ss-page .category-card h3 {
@@ -1863,12 +1880,16 @@ img {
     font-weight: 600;
     color: #374151;
     margin-bottom: 6px;
+
 }
 
 #ss-page .category-card p {
     font-size: 0.8rem;
     color: #6b7280;
+
 }
+
+
 
 #ss-page .content-grid {
     display: grid;
@@ -1876,6 +1897,7 @@ img {
     gap: 26px;
     width: 100%;
 }
+
 
 #ss-page .tickets-section,
 #ss-page .faq-section {
@@ -1885,6 +1907,8 @@ img {
     padding: 25px;
     display: flex;
     flex-direction: column;
+
+
 }
 
 #ss-page .tickets-header-area {
@@ -1892,6 +1916,8 @@ img {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
+
+
 }
 
 #ss-page .section-text h2, 
@@ -1900,16 +1926,19 @@ img {
     font-weight: 600;
     color: #111827;
     margin-bottom: 4px;
+
 }
 
 #ss-page .section-text p, 
 #ss-page .faq-section > p {
     font-size: 0.85rem;
     color: #6b7280;
+
 }
 
 #ss-page .faq-section > p {
     margin-bottom: 20px;
+
 }
 
 #ss-page .new-ticket-btn {
@@ -1925,10 +1954,13 @@ img {
     align-items: center;
     gap: 8px;
     transition: background-color 0.2s;
+
+
 }
 
 #ss-page .new-ticket-btn:hover {
     background-color: #374151;
+
 }
 
 #ss-page .icon-placeholder {
@@ -1937,6 +1969,8 @@ img {
     background-color: currentColor;
     border-radius: 2px;
     opacity: 0.8;
+
+
 }
 
 #ss-page .tickets-list, 
@@ -1944,6 +1978,7 @@ img {
     display: flex;
     flex-direction: column;
     gap: 16px;
+
 }
 
 #ss-page .ticket-card {
@@ -1955,7 +1990,9 @@ img {
     display: flex;
     flex-direction: column;
     gap: 10px;
+
 }
+
 
 #ss-page .ticket-header-row {
     display: flex;
@@ -1963,15 +2000,19 @@ img {
     gap: 12px;
 }
 
+
 #ss-page .ticket-id {
     font-size: 0.85rem;
     color: #6b7280;
     font-weight: 600;
 }
 
+
+
 #ss-page .badges {
     display: flex;
     gap: 8px;
+
 }
 
 #ss-page .badge {
@@ -1981,17 +2022,21 @@ img {
     padding: 4px 10px;
     border-radius: 16px;
     font-weight: 600;
+
+
 }
 
 #ss-page .ticket-subject {
     font-size: 1rem;
     font-weight: 600;
     color: #111827;
+
 }
 
 #ss-page .ticket-category {
     font-size: 0.85rem;
     color: #6b7280;
+
 }
 
 #ss-page .ticket-footer-row {
@@ -2003,6 +2048,8 @@ img {
     border-top: 1px solid #f3f4f6;
     font-size: 0.85rem;
     color: #9ca3af;
+
+
 }
 
 #ss-page .faq-item {
@@ -2011,16 +2058,20 @@ img {
     padding: 16px 0;
     border-bottom: 1px solid #f3f4f6;
     gap: 6px;
+
 }
 
 #ss-page .faq-item:last-child {
     border-bottom: none;
+
 }
+
 
 #ss-page .faq-question-row {
     display: flex;
     align-items: center;
     gap: 12px;
+
 }
 
 #ss-page .faq-icon {
@@ -2029,19 +2080,24 @@ img {
     background-color: #d1d5db;
     border-radius: 4px;
     flex-shrink: 0;
+
 }
 
 #ss-page .faq-question-row h4 {
     font-size: 0.95rem;
     font-weight: 600;
     color: #374151;
+
+
 }
 
 #ss-page .faq-views-row {
     font-size: 0.85rem;
     color: #9ca3af;
     padding-left: 28px;
+    
 }
+
 
 @media (max-width: 950px) {
     #ss-page .categories-container {
@@ -2051,6 +2107,9 @@ img {
         width: calc(33.333% - 10px);
         flex: none;
     }
+
+
+
 }
 
 @media (max-width: 1100px) {
@@ -2061,7 +2120,58 @@ img {
         flex-direction: column;
         gap: 16px;
     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
