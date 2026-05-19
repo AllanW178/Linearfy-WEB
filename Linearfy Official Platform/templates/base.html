@@ -15,7 +15,7 @@
     <div class="linearfy-main-content-page" id="main-linearfy-page">
         <div class="left-navigation-sidebar">
             <div class="top-app-icon-section">
-                <img src="/LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg" alt="Lineary Logo">
+                <img src="{{ url_for('static', filename='LINEARFY_IMG_ASSETS/Lineary_Logo_Icon.jpg') }}" alt="Product Icon">
                 <div class="right-side-app-icon-content">
                     <span class="app-text">App Name</span>
                     <p class="app-name">Welcome to Linearfy</p>
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="user-vital-profile-info-ui">
-                    <img src="/LINEARFY_IMG_ASSETS/Default_User_PFP.jpg" alt="Profile Picture">
+                    <img src="{{ url_for('static', filename='LINEARFY_IMG_ASSETS/Default_User_PFP.jpg') }}" alt="User Profile Picture">
                     <div class="right-side-user-profile-content">
                         <p class="user-displayname-detail">user0221</p>
                         <span class="user-username-detail">@registered_user0221</span>
