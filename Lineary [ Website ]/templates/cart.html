@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+    <div class="header-content">
+        <h1>Your Cart</h1>
+        <p>
+            Review your products before checkout.
+        </p>
+    </div>
+</div>
+
+<div class="cart-layout">
+
+    <div class="cart-items">
+
+        {% if cart_items %}
+
+            {% for item in cart_items %}
+
+            <div class="cart-item">
+
+                <div class="cart-item-image"></div>
+
+                <div class="cart-item-details">
+
+                    <h3>
+                        {{ item.product.name }}
+                    </h3>
+
+                    <p class="price">
+                        ${{ "%.2f"|format(item.product.price) }}
+                    </p>
+
+                    <a href="{{ url_for('update_cart',
+                                        product_id=item.product.id,
+                                        action='remove') }}"
+                       class="remove-btn">
+
+                        Remove
+
+                    </a>
+
+                </div>
+
+                <div class="cart-item-quantity">
+
+                    <a href="{{ url_for('update_cart',
+                                        product_id=item.product.id,
+                                        action='decrease') }}"
+                       class="qty-btn">
+
+                        -
+
+                    </a>
+
+                    <span style="padding: 0 15px;">
+                        {{ item.quantity }}
+                    </span>
+
+                    <a href="{{ url_for('update_cart',
+                                        product_id=item.product.id,
+                                        action='increase') }}"
+                       class="qty-btn">
+
+                        +
+
+                    </a>
+
+                </div>
+
+                <div class="cart-item-total">
+
+                    <p>
+                        ${{ "%.2f"|format(item.item_total) }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div style="padding: 40px;">
+                <h3>Your cart is empty.</h3>
+
+                <p>
+                    Add some minimalist goods
+                    to get started.
+                </p>
+
+                <a href="{{ url_for('shop') }}"
+                   class="btn">
+
+                    Browse Products
+
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="cart-summary">
+
+        <h2>
+            Order Summary
+        </h2>
+
+        <div class="summary-row">
+            <span>
+                Shipping
+            </span>
+
+            <span>
+                Free
+            </span>
+        </div>
+
+        <div class="summary-row total-row">
+
+            <span>
+                Total
+            </span>
+
+            <span>
+                ${{ "%.2f"|format(total) }}
+            </span>
+
+        </div>
+
+        {% if cart_items %}
+
+        <a href="{{ url_for('checkout_simulate') }}"
+           class="btn btn-checkout">
+
+            Proceed to Checkout
+
+        </a>
+
+        {% endif %}
+
+        <a href="{{ url_for('shop') }}"
+           class="continue-shopping">
+
+            Continue Shopping
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
