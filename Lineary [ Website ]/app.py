@@ -1,29 +1,36 @@
+
+# [ All the essential modules for Linearfy to work. Additional libraries used: SQLAlchemy and Bcrypt ]
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from datetime import datetime
+
+# 're' is to find a specific sign in a sentence. For example: "(Note): ...", the system will find "(Note):" and either replace or do a different action.  
 import re
+
+# This is incredibly useful when finding the files like database columns, HTML file, CSS, etc.
 import os
 
+
+# Defines the engine of Flask.
 app = Flask(__name__)
 
-# ==========================
-# DATABASE CONFIG
-# ==========================
 
+# This is basic database to connect our 'Linearfy.db' to our website.
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(BASE_DIR, 'linearfy.db')
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SECRET_KEY'] = 'linearfy_secret_key_12345'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-# ==========================
-# DATABASE MODELS
-# ==========================
+# Below are all the models we need for my website - Linearfy.
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,6 +41,7 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
 
 
+# Define the database columns one-by-one with different attributes.
 class Product(db.Model):
     id = db.Column(
         db.Integer,
@@ -76,10 +84,7 @@ class Product(db.Model):
     )
 
 
-# ==========================
-# CREATE DATABASE + PRODUCTS
-# ==========================
-
+# Below are databases and products, including their name, prices, categories, product image, and description. 
 with app.app_context():
     db.create_all()
 
@@ -154,13 +159,13 @@ with app.app_context():
 
         ]
 
+        # SAVE our products to the database and commit to it.
         db.session.bulk_save_objects(sample_products)
         db.session.commit()
 
 
-# ==========================
-# ROUTES
-# ==========================
+
+# This is our routes to connect the website 'index.html' and the products' data into Lineary.
 @app.route('/')
 def home():
 
@@ -176,6 +181,7 @@ def home():
         (Product.id <= 5)
     ).order_by(Product.id.desc())
 
+    # This just means how many products in a row per "page" in the home section.
     pagination = featured_query.paginate(
         page=page,
         per_page=5,
@@ -184,6 +190,7 @@ def home():
 
     products = pagination.items
 
+    # Return 'index.html' so the system will display the page.
     return render_template(
         'index.html',
         products=products,
@@ -191,6 +198,7 @@ def home():
     )
 
 
+# Shopping route with its corresponding elements (database & requests).
 @app.route('/shop')
 def shop():
 
@@ -199,10 +207,6 @@ def shop():
     page = request.args.get('page', 1, type=int)
 
     query = Product.query
-
-    # ==========================
-    # CATEGORY FILTER
-    # ==========================
 
     if category != 'all':
 
@@ -221,9 +225,7 @@ def shop():
                 Product.category == 'stationery'
             )
 
-    # ==========================
-    # SORTING
-    # ==========================
+
 
     if sort == 'price-low':
         query = query.order_by(Product.price.asc())
@@ -234,9 +236,6 @@ def shop():
     else:
         query = query.order_by(Product.id.desc())
 
-    # ==========================
-    # PAGINATION
-    # ==========================
 
     per_page = 4
 
@@ -269,28 +268,15 @@ def product_detail(product_id):
 @app.route('/add-to-cart/<int:product_id>')
 def add_to_cart(product_id):
 
-    # ==========================
-    # LOGIN CHECK
-    # ==========================
 
     if 'user_id' not in session:
+        flash('Please log in before placing an order.')
 
-        flash(
-            'Please log in before placing an order.'
-        )
+        return redirect(url_for('register'))
 
-        return redirect(
-            url_for('register')
-        )
+    product = Product.query.get_or_404(product_id)
 
-    product = Product.query.get_or_404(
-        product_id
-    )
-
-    cart = session.get(
-        'cart',
-        {}
-    )
+    cart = session.get('cart', {})
 
     product_id = str(product_id)
 
@@ -301,13 +287,9 @@ def add_to_cart(product_id):
 
     session['cart'] = cart
 
-    flash(
-        f'Successfully added {product.name} to cart.'
-    )
+    flash(f'Successfully added {product.name} to cart.')
 
-    return redirect(
-        url_for('cart')
-    )
+    return redirect(url_for('cart'))
 
 
 @app.route('/cart')
@@ -388,9 +370,6 @@ def checkout_simulate():
     return redirect(url_for('cart'))
 
 
-# ==========================
-# AUTH
-# ==========================
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -403,9 +382,6 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # ==========================
-        # PASSWORD VALIDATION
-        # ==========================
 
         password_regex = (
             r'^(?=.*[A-Za-z])'
@@ -413,22 +389,13 @@ def register():
             r'[A-Za-z\d@$!%*#?&]{8,}$'
         )
 
-        if not re.match(
-            password_regex,
-            password
-        ):
+        if not re.match(password_regex, password):
 
-            flash(
-                'Password must be at least 8 characters and contain letters and numbers.'
-            )
+            flash('Password must be at least 8 characters and contain letters and numbers.')
 
-            return redirect(
-                url_for('register')
-            )
+            return redirect(url_for('register'))
 
-        # ==========================
-        # EMAIL VALIDATION
-        # ==========================
+
 
         email_regex = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
 
@@ -438,10 +405,7 @@ def register():
             return redirect(url_for('register'))
 
 
-        existing_user = User.query.filter_by(
-            email=email
-
-        ).first()
+        existing_user = User.query.filter_by(email=email).first()
 
         if existing_user:
             flash('Email already exists.')
@@ -454,24 +418,14 @@ def register():
 
         today = datetime.today().date()
 
-        age = today.year - dob.year - (
-            (today.month, today.day)
-            <
-            (dob.month, dob.day)
-        )
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
 
         if age < 16 or age > 25:
-            flash(
-                'You must be between 16 and 25 years old to register.'
-            )
+            flash('You must be between 18 and 25 years old to register.')
 
-            return redirect(
-                url_for('register')
-            )
+            return redirect(url_for('register'))
 
-        hashed_password = bcrypt.generate_password_hash(
-            password
-        ).decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
         new_user = User(
             first_name=first_name,
@@ -498,14 +452,9 @@ def login():
     email = request.form.get('login_email')
     password = request.form.get('login_password')
 
-    user = User.query.filter_by(
-        email=email
-    ).first()
+    user = User.query.filter_by(email=email).first()
 
-    if user and bcrypt.check_password_hash(
-        user.password,
-        password
-    ):
+    if user and bcrypt.check_password_hash(user.password,password):
         session['user_id'] = user.id
         session['user_name'] = user.first_name
 
@@ -524,14 +473,16 @@ def logout():
     return redirect(url_for('home'))
 
 
-# ==========================
-# 404 PAGE
-# ==========================
+
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
 
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
