@@ -91,6 +91,7 @@ with app.app_context():
     if Product.query.count() == 0:
         sample_products = [
 
+            # List of base products.
             Product(
                 name="Matte Black Pen",
                 price=18.00,
@@ -156,6 +157,8 @@ with app.app_context():
                 image="leather-notebook.jpg",
                 description="Premium leather notebook with durable pages for journaling, planning, and ideas."
             )
+
+            
 
         ]
 
@@ -239,11 +242,7 @@ def shop():
 
     per_page = 4
 
-    pagination = query.paginate(
-        page=page,
-        per_page=per_page,
-        error_out=False
-    )
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
     products = pagination.items
 
