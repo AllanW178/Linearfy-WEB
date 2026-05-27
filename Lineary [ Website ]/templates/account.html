@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div class="header-content">
+        <h1>My Account</h1>
+        <p>Manage your profile and view your past orders.</p>
+    </div>
+</div>
+
+<div class="shop-layout" style="max-width: 1000px; margin: 0 auto; padding: 40px 20px;">
+    
+    <aside class="shop-sidebar" style="background: #f9f9f9; padding: 20px; border-radius: 8px; height: fit-content;">
+        <h3 style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">Profile Details</h3>
+        <p style="margin-bottom: 10px;"><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+        <p style="margin-bottom: 10px;"><strong>Email:</strong> {{ user.email }}</p>
+        <p style="margin-bottom: 20px;"><strong>DOB:</strong> {{ user.dob.strftime('%d %B %Y') }}</p>
+        <a href="{{ url_for('edit_account') }}" class="btn" style="width: 100%; text-align: center; display: block;">Edit Details</a>
+    </aside>
+
+    <main class="shop-main">
+        <h2 style="margin-bottom: 20px;">Order History</h2>
+        
+        {% if orders %}
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #222;">
+                        <th style="padding: 15px 10px;">Order ID</th>
+                        <th style="padding: 15px 10px;">Date</th>
+                        <th style="padding: 15px 10px;">Items</th>
+                        <th style="padding: 15px 10px;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr style="border-bottom: 1px solid #eaeaea;">
+                        <td style="padding: 15px 10px;">#100{{ order.id }}</td>
+                        <td style="padding: 15px 10px;">{{ order.order_date.strftime('%d %b %Y') }}</td>
+                        <td style="padding: 15px 10px; color: #666; font-size: 14px;">
+                            {% for item in order.items %}
+                                {{ item.quantity }}x {{ item.product.name }}<br>
+                            {% endfor %}
+                        </td>
+                        <td style="padding: 15px 10px; font-weight: bold;">${{ "%.2f"|format(order.total_price) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="padding: 40px; background: #f9f9f9; text-align: center; border-radius: 8px;">
+                <p style="margin-bottom: 20px; color: #666;">You haven't placed any orders yet.</p>
+                <a href="{{ url_for('shop') }}" class="btn">Start Shopping</a>
+            </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

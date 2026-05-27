@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div class="header-content">
+        <h1>Admin Dashboard</h1>
+        <p>Manage store inventory and catalog data.</p>
+    </div>
+</div>
+
+<div class="shop-layout admin-layout">
+    
+    <aside class="shop-sidebar admin-sidebar">
+        <h3>Add New Product</h3>
+        
+        <form action="{{ url_for('admin') }}" method="POST" class="admin-form">
+            <input type="text" name="name" placeholder="Product Name" required>
+            
+            <div class="admin-form-row">
+                <input type="number" step="0.01" name="price" placeholder="Price ($)" required>
+                <select name="category" required>
+                    <option value="home">Home Goods</option>
+                    <option value="lighting">Lighting</option>
+                    <option value="stationery">Stationery</option>
+                </select>
+            </div>
+
+            <input type="text" name="image" placeholder="Image Filename (e.g., mug.jpg)" required>
+            
+            <textarea name="description" placeholder="Product Description..." required></textarea>
+            
+            <div class="admin-checkbox-group">
+                <label><input type="checkbox" name="is_new"> Mark as New Arrival</label>
+                <label><input type="checkbox" name="is_sale"> Mark as On Sale</label>
+            </div>
+
+            <button type="submit" class="btn btn-submit">Create Product</button>
+        </form>
+    </aside>
+
+    <main class="shop-main admin-main">
+        <h2>Current Inventory</h2>
+        
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th class="admin-table-action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td class="admin-table-id">{{ product.id }}</td>
+                        <td class="admin-table-name">
+                            {{ product.name }}<br>
+                            <span class="admin-table-category">{{ product.category|title }}</span>
+                        </td>
+                        <td>${{ "%.2f"|format(product.price) }}</td>
+                        <td class="admin-table-action">
+                            <a href="{{ url_for('delete_product', product_id=product.id) }}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}

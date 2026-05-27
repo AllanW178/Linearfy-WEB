@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+    <div class="header-content">
+        <h1>Your Cart</h1>
+        <p>Review your products before checkout.</p>
+    </div>
+</div>
+
+<div class="cart-layout">
+    <div class="cart-items">
+        {% if cart_items %}
+            {% for item in cart_items %}
+            <div class="cart-item" style="display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #eee;">
+
+                <div class="cart-item-image" style="width: 100px; height: 100px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f4f4f4; margin-right: 20px;">
+                    <img src="{{ url_for('static', filename='images/products/' + item.product.image) }}" alt="{{ item.product.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+
+                <div class="cart-item-details" style="flex-grow: 1;">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.1rem;">{{ item.product.name }}</h3>
+                    <p class="price" style="margin: 0 0 10px 0; color: #555;">${{ "%.2f"|format(item.product.price) }}</p>
+                    <a href="{{ url_for('update_cart', product_id=item.product.id, action='remove') }}" class="remove-btn" style="font-size: 0.9rem; color: #888; text-decoration: underline;">Remove</a>
+                </div>
+
+                <div class="cart-item-quantity" style="display: flex; align-items: center; gap: 15px; margin-right: 30px;">
+                    
+                    <a href="{{ url_for('update_cart', product_id=item.product.id, action='decrease') }}" class="qty-btn" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: #fff; border: 1px solid #ddd; border-radius: 4px; color: #333; text-decoration: none; font-size: 1.2rem;">
+                        -
+                    </a>
+                    
+                    <span style="font-weight: 500; min-width: 20px; text-align: center;">{{ item.quantity }}</span>
+                    
+                    <a href="{{ url_for('update_cart', product_id=item.product.id, action='increase') }}" class="qty-btn" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: #fff; border: 1px solid #ddd; border-radius: 4px; color: #333; text-decoration: none; font-size: 1.2rem;">
+                        +
+                    </a>
+
+                </div>
+
+                <div class="cart-item-total" style="font-weight: bold; font-size: 1.1rem;">
+                    <p>${{ "%.2f"|format(item.item_total) }}</p>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        {% else %}
+            <div style="padding: 40px; text-align: center; background: #f9f9f9; border-radius: 8px;">
+                <h3 style="margin-bottom: 10px;">Your cart is empty.</h3>
+                <p style="margin-bottom: 20px; color: #666;">Add some minimalist goods to get started.</p>
+                <a href="{{ url_for('shop') }}" class="btn">Browse Products</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="cart-summary">
+        <h2>Order Summary</h2>
+        <div class="summary-row">
+            <span>Shipping</span>
+            <span>Free</span>
+        </div>
+        <div class="summary-row total-row">
+            <span>Total</span>
+            <span>${{ "%.2f"|format(total) }}</span>
+        </div>
+        
+        {% if cart_items %}
+        <a href="{{ url_for('checkout_simulate') }}" class="btn btn-checkout">Proceed to Checkout</a>
+        {% endif %}
+        
+        <a href="{{ url_for('shop') }}" class="continue-shopping">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}
