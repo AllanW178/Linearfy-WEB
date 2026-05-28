@@ -1,3 +1,5 @@
+
+# Those Python library build-in modules are useful for Linearfy, that's why we are using them.
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -5,13 +7,14 @@ from datetime import datetime
 import re
 import os
 
+
 app = Flask(__name__)
 
-# ==========================
-# DATABASE CONFIG
-# ==========================
 
+
+# We need to load all the essential database requirements that we need to make Linearfy work.
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
 db_path = os.path.join(BASE_DIR, 'linearfy.db')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
@@ -19,11 +22,10 @@ app.config['SECRET_KEY'] = 'linearfy_secret_key_12345'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
 bcrypt = Bcrypt(app)
 
-# ==========================
-# DATABASE MODELS
-# ==========================
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,7 +46,9 @@ class Product(db.Model):
     is_new = db.Column(db.Boolean, default=False)
     is_sale = db.Column(db.Boolean, default=False)
 
-# NEW SPRINT 2 TABLES:
+
+# For Sprint #2 improvements - New Database Tables:
+
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -62,9 +66,7 @@ class OrderItem(db.Model):
 
 
 
-# ==========================
-# CREATE DATABASE + PRODUCTS
-# ==========================
+
 
 with app.app_context():
     db.create_all()
@@ -144,9 +146,7 @@ with app.app_context():
         db.session.commit()
 
 
-# ==========================
-# ROUTES
-# ==========================
+
 @app.route('/')
 def home():
 
@@ -186,9 +186,7 @@ def shop():
 
     query = Product.query
 
-    # ==========================
-    # CATEGORY FILTER
-    # ==========================
+
 
     if category != 'all':
 
@@ -207,9 +205,7 @@ def shop():
                 Product.category == 'stationery'
             )
 
-    # ==========================
-    # SORTING
-    # ==========================
+
 
     if sort == 'price-low':
         query = query.order_by(Product.price.asc())
@@ -220,9 +216,7 @@ def shop():
     else:
         query = query.order_by(Product.id.desc())
 
-    # ==========================
-    # PAGINATION
-    # ==========================
+
 
     per_page = 4
 
@@ -255,9 +249,7 @@ def product_detail(product_id):
 @app.route('/add-to-cart/<int:product_id>')
 def add_to_cart(product_id):
 
-    # ==========================
-    # LOGIN CHECK
-    # ==========================
+
 
     if 'user_id' not in session:
 
@@ -406,21 +398,21 @@ def checkout_simulate():
 
 @app.route('/account')
 def account():
-    # Security check 1: Make sure they have an active session cookie
+    
     if 'user_id' not in session:
         flash('Please log in to view your account.')
         return redirect(url_for('register'))
     
-    # Fetch user details
+
     user = User.query.get(session['user_id'])
     
-    # Security check 2 (THE FIX): If the cookie exists but the user was deleted from the DB
+    
     if user is None:
         session.clear()
         flash('Session expired or invalid. Please log in again.')
         return redirect(url_for('register'))
 
-    # Fetch their specific order history
+    
     orders = Order.query.filter_by(user_id=user.id).order_by(Order.order_date.desc()).all()
     
     return render_template('account.html', user=user, orders=orders)
@@ -428,7 +420,7 @@ def account():
 
 @app.route('/edit-account', methods=['GET', 'POST'])
 def edit_account():
-    # Security check: Ensure they are logged in
+
     if 'user_id' not in session:
         flash('Please log in to edit your details.')
         return redirect(url_for('register'))
@@ -442,20 +434,20 @@ def edit_account():
         new_email = request.form.get('email')
         new_password = request.form.get('new_password')
         
-        # Check if they are trying to change to an email that already exists
+        
         if new_email != user.email:
             existing_user = User.query.filter_by(email=new_email).first()
             if existing_user:
                 flash('That email is already registered to another account.')
                 return redirect(url_for('edit_account'))
                 
-        # Update standard fields
+
         user.first_name = request.form.get('first_name')
         user.last_name = request.form.get('last_name')
         user.email = new_email
         user.dob = datetime.strptime(request.form.get('dob'), '%Y-%m-%d').date()
         
-        # Only update the password if they actually typed a new one
+        
         if new_password:
             password_regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$'
             if not re.match(password_regex, new_password):
@@ -465,7 +457,7 @@ def edit_account():
             
         db.session.commit()
         
-        # Update the session name just in case they changed their first name!
+        
         session['user_name'] = user.first_name 
         
         flash('Your account details have been successfully updated.')
@@ -475,9 +467,7 @@ def edit_account():
 
 
 
-# ==========================
-# AUTH
-# ==========================
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -490,9 +480,7 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # ==========================
-        # PASSWORD VALIDATION
-        # ==========================
+
 
         password_regex = (
             r'^(?=.*[A-Za-z])'
@@ -513,9 +501,7 @@ def register():
                 url_for('register')
             )
 
-        # ==========================
-        # EMAIL VALIDATION
-        # ==========================
+
 
         email_regex = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
 
@@ -549,7 +535,7 @@ def register():
 
         if age < 16 or age > 25:
             flash(
-                'You must be between 16 and 25 years old to register.'
+                'You must be between 18 and 25 years old to register.'
             )
 
             return redirect(
@@ -613,13 +599,10 @@ def logout():
     return redirect(url_for('home'))
 
 
-# ==========================
-# ADMIN CONTROL PANEL
-# ==========================
 
 @app.route('/make-me-admin')
 def make_me_admin():
-    """Temporary route to upgrade your account for testing Sprint #2"""
+
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
         if user:
@@ -631,12 +614,12 @@ def make_me_admin():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    # Security Check: Bounce them if they aren't an admin
+
     if not session.get('is_admin'):
         flash('Access denied. Administrators only.')
         return redirect(url_for('home'))
 
-    # CREATE functionality
+
     if request.method == 'POST':
         name = request.form.get('name')
         price = float(request.form.get('price'))
@@ -657,7 +640,7 @@ def admin():
         flash(f'Product "{name}" was added to the store.')
         return redirect(url_for('admin'))
 
-    # READ functionality (Fetching all products for the table)
+
     products = Product.query.order_by(Product.id.desc()).all()
     return render_template('admin.html', products=products)
 
@@ -675,14 +658,21 @@ def delete_product(product_id):
     return redirect(url_for('admin'))
 
 
-# ==========================
-# 404 PAGE
-# ==========================
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
 
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
