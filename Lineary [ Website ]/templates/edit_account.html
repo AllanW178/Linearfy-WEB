@@ -8,30 +8,30 @@
     </div>
 </div>
 
-<div class="auth-wrapper" style="min-height: 60vh; padding: 40px 0;">
-    <div style="background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 14px 28px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin: 0 auto;">
+<div class="auth-wrapper original-wrapper">
+    <div class="original-container">
         
-        <form action="{{ url_for('edit_account') }}" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+        <form action="{{ url_for('edit_account') }}" method="POST" class="original-form">
             
-            <div class="input-row" style="display: flex; gap: 10px;">
-                <input type="text" name="first_name" value="{{ user.first_name }}" required style="width: 100%; padding: 12px; background: #eee; border: none; border-radius: 4px;">
-                <input type="text" name="last_name" value="{{ user.last_name }}" required style="width: 100%; padding: 12px; background: #eee; border: none; border-radius: 4px;">
+            <div class="input-row original-row">
+                <input type="text" name="first_name" value="{{ user.first_name }}" required class="original-input-short">
+                <input type="text" name="last_name" value="{{ user.last_name }}" required class="original-input-short">
             </div>
             
-            <label style="font-size: 12px; color: #666; font-weight: bold; margin-bottom: -10px;">Date of Birth</label>
-            <input type="date" name="dob" value="{{ user.dob.strftime('%Y-%m-%d') }}" required style="padding: 12px; background: #eee; border: none; border-radius: 4px;">
+            <label class="original-label">Date of Birth</label>
+            <input type="date" name="dob" value="{{ user.dob.strftime('%Y-%m-%d') }}" required class="original-input-full">
             
-            <label style="font-size: 12px; color: #666; font-weight: bold; margin-bottom: -10px;">Email Address</label>
-            <input type="email" name="email" value="{{ user.email }}" required style="padding: 12px; background: #eee; border: none; border-radius: 4px;">
+            <label class="original-label">Email Address</label>
+            <input type="email" name="email" value="{{ user.email }}" required class="original-input-full">
             
-            <hr style="border: 0; border-top: 1px solid #ddd; margin: 15px 0;">
+            <hr class="original-hr">
             
-            <label style="font-size: 12px; color: #666; font-weight: bold; margin-bottom: -10px;">Change Password (Leave blank to keep current password)</label>
-            <input type="password" name="new_password" placeholder="New Password" style="padding: 12px; background: #eee; border: none; border-radius: 4px;">
+            <label class="original-label">Change Password (Leave blank to keep current password)</label>
+            <input type="password" name="new_password" placeholder="New Password" class="original-input-full">
             
-            <div style="display: flex; gap: 15px; margin-top: 20px;">
-                <a href="{{ url_for('account') }}" class="btn" style="background: #fff; color: #111; border: 1px solid #111; width: 50%; text-align: center;">Cancel</a>
-                <button type="submit" class="btn" style="width: 50%;">Save Changes</button>
+            <div class="original-btn-group">
+                <a href="{{ url_for('account') }}" class="btn original-btn-cancel">Cancel</a>
+                <button type="submit" class="btn original-btn-submit">Save Changes</button>
             </div>
 
         </form>
