@@ -1,203 +1,87 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header hidden">
     <div class="header-content">
-        <h1>All Products</h1>
-        <p>All the essential products or items for your home and family.</p>
+        <h1>The Collection</h1>
+        <p>Essential pieces curated for your home and lifestyle.</p>
     </div>
 </div>
 
 <div class="shop-layout">
-    <aside class="shop-sidebar">
-
+    <aside class="shop-sidebar hidden stagger-1">
         <div class="filter-group">
-
             <h3>Categories</h3>
-
             <ul class="filter-list">
-
                 <li>
-                    <a href="{{ url_for('shop',
-                                        category='all',
-                                        sort=current_sort) }}"
-                    class="{% if current_category == 'all' %}active{% endif %}">
-
-                        All Products
-
-                    </a>
+                    <a href="{{ url_for('shop', category='all', sort=current_sort) }}" class="{% if current_category == 'all' %}active{% endif %}">All Products</a>
                 </li>
-
                 <li>
-                    <a href="{{ url_for('shop',
-                                        category='lighting',
-                                        sort=current_sort) }}"
-                    class="{% if current_category == 'lighting' %}active{% endif %}">
-
-                        Lighting
-
-                    </a>
+                    <a href="{{ url_for('shop', category='lighting', sort=current_sort) }}" class="{% if current_category == 'lighting' %}active{% endif %}">Lighting</a>
                 </li>
-
                 <li>
-                    <a href="{{ url_for('shop',
-                                        category='stationery',
-                                        sort=current_sort) }}"
-                    class="{% if current_category == 'stationery' %}active{% endif %}">
-
-                        Stationery
-
-                    </a>
+                    <a href="{{ url_for('shop', category='stationery', sort=current_sort) }}" class="{% if current_category == 'stationery' %}active{% endif %}">Stationery</a>
                 </li>
-
                 <li>
-                    <a href="{{ url_for('shop',
-                                        category='home',
-                                        sort=current_sort) }}"
-                    class="{% if current_category == 'home' %}active{% endif %}">
-
-                        Home Goods
-
-                    </a>
+                    <a href="{{ url_for('shop', category='home', sort=current_sort) }}" class="{% if current_category == 'home' %}active{% endif %}">Home Goods</a>
                 </li>
-
             </ul>
-
         </div>
 
         <div class="filter-group">
-
             <h3>Sort By</h3>
-
             <form method="GET">
-
-                <input type="hidden"
-                    name="category"
-                    value="{{ current_category }}">
-
-                <select name="sort"
-                        class="sort-select"
-                        onchange="this.form.submit()">
-
-                    <option value="newest"
-                        {% if current_sort == 'newest' %}selected{% endif %}>
-                        Newest Arrivals
-                    </option>
-
-                    <option value="price-low"
-                        {% if current_sort == 'price-low' %}selected{% endif %}>
-                        Price: Low to High
-                    </option>
-
-                    <option value="price-high"
-                        {% if current_sort == 'price-high' %}selected{% endif %}>
-                        Price: High to Low
-                    </option>
-
+                <input type="hidden" name="category" value="{{ current_category }}">
+                <select name="sort" class="sort-select custom-select" onchange="this.form.submit()">
+                    <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+                    <option value="price-low" {% if current_sort == 'price-low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price-high" {% if current_sort == 'price-high' %}selected{% endif %}>Price: High to Low</option>
                 </select>
-
             </form>
-
         </div>
-
     </aside>
 
     <main class="shop-main">
-        <div class="product-grid shop-grid">
+        <div class="product-grid shop-grid hidden stagger-2">
             {% for product in products %}
             <div class="product-card" data-category="{{ product.category }}">
                 <div class="image-wrapper">
-                    <img
-                        src="{{ url_for('static',
-                        filename='images/products/' + product.image) }}"
-                        alt="{{ product.name }}"
-                        class="product-image"
-                    />
+                    <img src="{{ url_for('static', filename='images/products/' + product.image) }}" alt="{{ product.name }}" class="product-image" />
                     {% if product.is_new %}
-                    <span class="badge">New</span>
+                        <span class="badge badge-new">New</span>
                     {% elif product.is_sale %}
-                    <span class="badge">Sale</span>
+                        <span class="badge badge-sale">Sale</span>
                     {% endif %}
                     <div class="quick-action">
-                        <a href="{{ url_for('product_detail', product_id=product.id) }}"class="btn-quick">
-                            View Details
-                        </a>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn-quick">View Details</a>
                     </div>
                 </div>
                 <div class="product-info">
-                    <h3>
-                        {{ product.name }}
-                    </h3>
-
-                    <p class="price">
-                        ${{ "%.2f"|format(product.price) }}
-                    </p>
-
-                    <p style="font-size: 14px;
-                            color: #777;
-                            margin-top: 8px;
-                            line-height: 1.7;">
-
-                        {{ product.description[:65] }}...
-
-                    </p>
-
+                    <p class="stock-status">{{ product.category|title }}</p>
+                    <h3>{{ product.name }}</h3>
+                    <p class="price">${{ "%.2f"|format(product.price) }}</p>
+                    <p class="product-excerpt">{{ product.description[:65] }}...</p>
                 </div>
             </div>
             {% endfor %}
         </div>
 
-        <div class="pagination">
-
+        <div class="pagination hidden stagger-3">
             {% if pagination.has_prev %}
-
-            <a href="{{ url_for('shop',
-                                page=pagination.prev_num,
-                                category=current_category,
-                                sort=current_sort) }}"
-            class="page-arrow">
-
-                &larr;
-
-            </a>
-
+                <a href="{{ url_for('shop', page=pagination.prev_num, category=current_category, sort=current_sort) }}" class="page-arrow">&larr;</a>
             {% endif %}
 
             {% for page_num in pagination.iter_pages() %}
-
                 {% if page_num %}
-
-                <a href="{{ url_for('shop',
-                                    page=page_num,
-                                    category=current_category,
-                                    sort=current_sort) }}"
-                class="page-number
-                {% if page_num == pagination.page %}
-                active
-                {% endif %}">
-
-                    {{ page_num }}
-
-                </a>
-
+                    <a href="{{ url_for('shop', page=page_num, category=current_category, sort=current_sort) }}" class="page-number {% if page_num == pagination.page %}active{% endif %}">
+                        {{ page_num }}
+                    </a>
                 {% endif %}
-
             {% endfor %}
 
             {% if pagination.has_next %}
-
-            <a href="{{ url_for('shop',
-                                page=pagination.next_num,
-                                category=current_category,
-                                sort=current_sort) }}"
-            class="page-arrow">
-
-                &rarr;
-
-            </a>
-
+                <a href="{{ url_for('shop', page=pagination.next_num, category=current_category, sort=current_sort) }}" class="page-arrow">&rarr;</a>
             {% endif %}
-
         </div>
     </main>
 </div>
