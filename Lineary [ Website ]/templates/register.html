@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="auth-wrapper">
-    <div class="auth-container" id="authContainer">
+<div class="auth-wrapper hidden fade-in-up">
+    <div class="auth-container glass-panel" id="authContainer">
         
         <div class="form-container sign-up-container">
             <form action="{{ url_for('register') }}" method="POST" id="registerForm">
@@ -11,12 +11,7 @@
                     <input type="text" name="first_name" placeholder="First Name" required>
                     <input type="text" name="last_name" placeholder="Last Name" required>
                 </div>
-                <input
-                    type="date"
-                    name="dob"
-                    id="dob"
-                    required
-                >
+                <input type="date" name="dob" id="dob" required>
                 <input type="email" name="email" placeholder="Email Address" required>
                 <input type="password" name="password" id="password" placeholder="Password" required>
                 <input type="password" name="confirm_password" id="confirm_password" placeholder="Repeat Password" required>
@@ -40,12 +35,12 @@
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
                     <h2>Welcome Back!</h2>
-                    <p>"I take your space, but fill your heart. I cost you money, but make you smart. What am I again?"<br><br>(A good book / A perfect buy)</p>
+                    <p>Enter your personal details to seamlessly manage your curated collection.</p>
                     <button class="btn btn-ghost" id="signIn">Log In</button>
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h2>Hello, Friend!</h2>
-                    <p>"I have a mouth but never speak, and a bed but never sleep. You feed me items, and I grow, but you'll feel lighter when I go. What am I?"<br><br>(Haha... A Shopping Cart - 🛒)<br><br><br>Oh.. ok, it's not funny for you.</p>
+                    <p>Begin your journey of premium, minimalist aesthetics today.</p>
                     <button class="btn btn-ghost" id="signUp">Sign Up</button>
                 </div>
             </div>
