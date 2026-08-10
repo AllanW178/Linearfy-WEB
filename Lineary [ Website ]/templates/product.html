@@ -1,81 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="page-header">
-    <div class="header-content">
-        <h1>{{ product.name }}</h1>
-        <p>
-            Category: {{ product.category.title() }}
-        </p>
+<div class="product-detail-container hidden">
+    <div class="breadcrumb">
+        <a href="{{ url_for('shop') }}">Shop</a> <span class="separator">/</span> 
+        <a href="{{ url_for('shop', category=product.category) }}">{{ product.category|title }}</a> <span class="separator">/</span> 
+        <span class="current">{{ product.name }}</span>
     </div>
-</div>
 
-<div style="max-width: 900px; margin: auto; padding: 50px;">
-
-    <div class="product-card" style="padding: 40px;">
-
-        <div class="image-wrapper">
-            <img
-                src="{{ url_for('static',
-                filename='images/products/' + product.image) }}"
-                alt="{{ product.name }}"
-                class="product-image"
-            />
-
-            {% if product.is_new %}
-                <span class="badge">
-                    New
-                </span>
-            {% elif product.is_sale %}
-                <span class="badge">
-                    Sale
-                </span>
-            {% endif %}
-        </div>
-
-        <div class="product-info">
-
-            <h2>
-                {{ product.name }}
-            </h2>
-
-            <p class="stock-status">
-                Category:
-                {{ product.category }}
-            </p>
-
-            <p style="margin-top: 20px;
-                    line-height: 1.8;
-                    color: #666;">
-
-                {{ product.description }}
-
-            </p>
-
-            <div style="margin-top: 20px;">
-
-                <a href="{{ url_for('add_to_cart', product_id=product.id) }}"
-                   class="btn">
-
-                    Add to Cart
-
-                </a>
-
-                <a href="{{ url_for('shop') }}"
-                   class="continue-shopping"
-                   style="margin-left:20px;">
-
-                    Back to Shop
-
-                </a>
-
+    <div class="product-detail-grid">
+        <div class="product-detail-image-col">
+            <div class="detail-image-wrapper">
+                <img src="{{ url_for('static', filename='images/products/' + product.image) }}" alt="{{ product.name }}" class="product-detail-img" />
+                {% if product.is_new %}
+                    <span class="badge badge-new">New</span>
+                {% elif product.is_sale %}
+                    <span class="badge badge-sale">Sale</span>
+                {% endif %}
             </div>
-
         </div>
 
+        <div class="product-detail-info-col">
+            <div class="sticky-info">
+                <p class="detail-category">{{ product.category|title }}</p>
+                <h1 class="detail-title">{{ product.name }}</h1>
+                <p class="detail-price">${{ "%.2f"|format(product.price) }}</p>
+                
+                <div class="detail-description">
+                    <p>{{ product.description }}</p>
+                </div>
+
+                <div class="detail-actions">
+                    <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="btn btn-add-cart">Add to Cart &rarr;</a>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
-
 {% endblock %}
