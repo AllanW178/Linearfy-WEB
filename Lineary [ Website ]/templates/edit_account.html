@@ -1,41 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header hidden">
     <div class="header-content">
         <h1>Edit Details</h1>
-        <p>Update your personal information below.</p>
+        <p>Keep your personal information up to date.</p>
     </div>
 </div>
 
-<div class="auth-wrapper original-wrapper">
-    <div class="original-container">
-        
-        <form action="{{ url_for('edit_account') }}" method="POST" class="original-form">
+<div class="auth-wrapper refined-wrapper hidden stagger-1">
+    <div class="refined-container">
+        <form action="{{ url_for('edit_account') }}" method="POST" class="refined-form">
             
-            <div class="input-row original-row">
-                <input type="text" name="first_name" value="{{ user.first_name }}" required class="original-input-short">
-                <input type="text" name="last_name" value="{{ user.last_name }}" required class="original-input-short">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>First Name</label>
+                    <input type="text" name="first_name" value="{{ user.first_name }}" required>
+                </div>
+                <div class="input-group">
+                    <label>Last Name</label>
+                    <input type="text" name="last_name" value="{{ user.last_name }}" required>
+                </div>
             </div>
             
-            <label class="original-label">Date of Birth</label>
-            <input type="date" name="dob" value="{{ user.dob.strftime('%Y-%m-%d') }}" required class="original-input-full">
-            
-            <label class="original-label">Email Address</label>
-            <input type="email" name="email" value="{{ user.email }}" required class="original-input-full">
-            
-            <hr class="original-hr">
-            
-            <label class="original-label">Change Password (Leave blank to keep current password)</label>
-            <input type="password" name="new_password" placeholder="New Password" class="original-input-full">
-            
-            <div class="original-btn-group">
-                <a href="{{ url_for('account') }}" class="btn original-btn-cancel">Cancel</a>
-                <button type="submit" class="btn original-btn-submit">Save Changes</button>
+            <div class="input-group">
+                <label>Date of Birth</label>
+                <input type="date" name="dob" value="{{ user.dob.strftime('%Y-%m-%d') }}" required>
             </div>
-
+            
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" name="email" value="{{ user.email }}" required>
+            </div>
+            
+            <hr class="elegant-hr">
+            
+            <div class="input-group">
+                <label>Change Password (Optional)</label>
+                <input type="password" name="new_password" placeholder="Leave blank to keep current">
+            </div>
+            
+            <div class="button-grid">
+                <a href="{{ url_for('account') }}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
         </form>
-
     </div>
 </div>
 {% endblock %}
