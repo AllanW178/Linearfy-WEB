@@ -1,23 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="error-container">
-    
-    <h1 class="error-title">
-        Hmm, this page is lost somewhere...
-    </h1>
-    
-    <h2 class="error-subtitle">
-        Page Not Found
-    </h2>
-    
-    <p class="error-text">
-        We couldn't find the page you're looking for. It might have been moved, deleted, or perhaps it never existed in our catalog. Let's go back to the center, shall we?
-    </p>
-    
-    <a href="{{ url_for('home') }}" class="btn btn-return">
-        Return to Homepage
-    </a>
-
+<div class="error-container hidden fade-in-up">
+    <div class="error-visual">
+        <h1 class="error-title glitched">404</h1>
+    </div>
+    <h2 class="error-subtitle">Page Not Found</h2>
+    <p class="error-text">The page you're looking for has moved into the void. Let's guide you back to our curated collection.</p>
+    <a href="{{ url_for('home') }}" class="btn btn-return">Return to Homepage</a>
 </div>
 {% endblock %}
