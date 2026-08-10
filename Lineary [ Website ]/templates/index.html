@@ -2,23 +2,25 @@
 
 {% block content %}
 <section class="hero hidden">
-    <h1>Tag, you're IT!<br>Your time to buy something.</h1>
-    <p>Wanna shopping? You should definitely try out Linearfy...</p>
-    <a href="{{ url_for('shop') }}" class="btn">Shop Collection</a>
+    <div class="hero-content">
+        <h1>Tag, you're IT!<br>Your time to elevate your space.</h1>
+        <p>Curated aesthetics for the modern individual.</p>
+        <a href="{{ url_for('shop') }}" class="btn btn-hero">Shop Collection</a>
+    </div>
 </section>
 
 <section class="features hidden">
-    <div class="feature-item">
-        <h3>Pretty designs</h3>
-        <p>We always upload products that are aesthetic and meet people's needs.</p>
+    <div class="feature-item stagger-1">
+        <h3>Pristine Design</h3>
+        <p>Aesthetic, functional, and crafted to meet your everyday needs.</p>
     </div>
-    <div class="feature-item">
-        <h3>The Most Sustainable Materials</h3>
-        <p>Don't worry, we use the most sustainable materials to make our products. Nothing here would harm the environment.</p>
+    <div class="feature-item stagger-2">
+        <h3>Sustainable Core</h3>
+        <p>Consciously sourced materials. Zero compromise on the environment.</p>
     </div>
-    <div class="feature-item">
-        <h3>Fast Delivery</h3>
-        <p>We will try to ship your ordered products right to your door, anywhere in New Zealand, in a short period of time.</p>
+    <div class="feature-item stagger-3">
+        <h3>Rapid Delivery</h3>
+        <p>Shipped directly to your door anywhere in New Zealand, seamlessly.</p>
     </div>
 </section>
 
@@ -29,77 +31,45 @@
     
     <div class="product-grid">
         {% for product in products %}
-        <div class="product-card">
+        <div class="product-card stagger-{{ loop.index }}">
             <div class="image-wrapper">
-                <img
-                    src="{{ url_for('static',
-                    filename='images/products/' + product.image) }}"
-                    alt="{{ product.name }}"
-                    class="product-image"
-                />
+                <img src="{{ url_for('static', filename='images/products/' + product.image) }}" alt="{{ product.name }}" class="product-image" />
                 {% if product.is_new %}
-                <span class="badge">New</span>
+                    <span class="badge badge-new">New</span>
                 {% elif product.is_sale %}
-                <span class="badge">Sale</span>
+                    <span class="badge badge-sale">Sale</span>
                 {% endif %}
+                <div class="quick-action">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn-quick">View Details</a>
+                </div>
             </div>
             <div class="product-info">
-                <p class="stock-status">Category: {{ product.category }}</p>
+                <p class="stock-status">{{ product.category|title }}</p>
                 <h3>{{ product.name }}</h3>
                 <p class="price">${{ "%.2f"|format(product.price) }}</p>
-                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="action-link">
-                    View Details &rarr;
-                </a>
             </div>
         </div>
         {% endfor %}
     </div>
     
     {% if pagination.pages > 1 %}
-
-    <div class="pagination hidden">
-
+    <div class="pagination hidden stagger-1">
         {% if pagination.has_prev %}
-        <a href="{{ url_for('home',
-                            page=pagination.prev_num) }}"
-        class="page-arrow">
-
-            &larr;
-
-        </a>
+            <a href="{{ url_for('home', page=pagination.prev_num) }}" class="page-arrow">&larr;</a>
         {% endif %}
 
         {% for page_num in pagination.iter_pages() %}
-
             {% if page_num %}
-            <a href="{{ url_for('home',
-                                page=page_num) }}"
-            class="page-number
-            {% if page_num == pagination.page %}
-            active
-            {% endif %}">
-
-                {{ page_num }}
-
-            </a>
+                <a href="{{ url_for('home', page=page_num) }}" class="page-number {% if page_num == pagination.page %}active{% endif %}">
+                    {{ page_num }}
+                </a>
             {% endif %}
-
         {% endfor %}
 
         {% if pagination.has_next %}
-        <a href="{{ url_for('home',
-                            page=pagination.next_num) }}"
-        class="page-arrow">
-
-            &rarr;
-
-        </a>
+            <a href="{{ url_for('home', page=pagination.next_num) }}" class="page-arrow">&rarr;</a>
         {% endif %}
-
     </div>
-
     {% endif %}
-    
 </section>
 {% endblock %}
-
