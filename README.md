@@ -1,3 +1,4 @@
+Please use 'pip install -r requirements.txt' to install all the Python modules/libraries, in order to use or visit the website. Try 'pip install -r requirements_back_up.txt' if the first version doesn't work.
 
 ## LINEARFY ##
 
