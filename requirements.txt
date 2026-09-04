@@ -1,5 +1,0 @@
-cat << 'EOF' > requirements.txt
-Flask
-Flask-SQLAlchemy
-Flask-Bcrypt
-EOF
