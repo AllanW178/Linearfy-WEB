@@ -4,35 +4,41 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy import text
 from datetime import datetime
 from functools import wraps
-import os
-import re
 from uuid import uuid4
 from werkzeug.utils import secure_filename
+import os
+import re
 
 
 app = Flask(__name__)
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     f"sqlite:///{os.path.join(BASE_DIR, 'linearfy.db')}"
 )
 app.config["SECRET_KEY"] = os.environ.get(
     "LINEARFY_SECRET_KEY",
-    "development-only-change-me"
+    "development-only-change-me",
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "images", "uploads")
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 ALLOWED_CATEGORIES = {"home", "lighting", "stationery"}
 ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
+
 MAX_LISTINGS_PER_DAY = 5
 MAX_STOCK_PER_LISTING = 999
 MAX_PRICE_PER_LISTING = 10000
 
-UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "images", "uploads")
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+# Assessment-only administrator account.
+DEMO_ADMIN_EMAIL = "admin@linearfy.test"
+DEMO_ADMIN_PASSWORD = "iamreallycookedonthis1"
 
 
 class User(db.Model):
@@ -55,6 +61,7 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=False)
     is_new = db.Column(db.Boolean, default=False)
     is_sale = db.Column(db.Boolean, default=False)
+
     stock_count = db.Column(db.Integer, nullable=False, default=10)
     seller_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     status = db.Column(db.String(20), nullable=False, default="approved")
@@ -66,7 +73,10 @@ class Product(db.Model):
         nullable=False,
     )
 
-    seller = db.relationship("User", backref=db.backref("listings", lazy=True))
+    seller = db.relationship(
+        "User",
+        backref=db.backref("listings", lazy=True),
+    )
 
 
 class Order(db.Model):
@@ -97,15 +107,14 @@ class ProductReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
     reporter_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
     reason = db.Column(db.String(80), nullable=False)
     details = db.Column(db.Text, nullable=False)
-
-    # Fixes the NOT NULL database error when a report is submitted.
     status = db.Column(db.String(20), nullable=False, default="pending")
-
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     product = db.relationship("Product")
+    reporter = db.relationship("User", foreign_keys=[reporter_id])
 
 
 class WishlistItem(db.Model):
@@ -127,8 +136,22 @@ class WishlistItem(db.Model):
     )
 
 
+def add_missing_user_columns():
+    """Adds fields missing from older versions of the User table."""
+    with db.engine.begin() as connection:
+        columns = {
+            row[1]
+            for row in connection.execute(text("PRAGMA table_info(user)"))
+        }
+
+        if "created_at" not in columns:
+            connection.execute(
+                text("ALTER TABLE user ADD COLUMN created_at DATETIME")
+            )
+
+
 def add_missing_product_columns():
-    """Development migration for product fields added after the first schema."""
+    """Adds fields missing from older versions of the Product table."""
     with db.engine.begin() as connection:
         columns = {
             row[1]
@@ -152,19 +175,21 @@ def add_missing_product_columns():
         connection.execute(
             text(
                 "UPDATE product "
-                "SET created_at = COALESCE(created_at, CURRENT_TIMESTAMP), "
-                "updated_at = COALESCE(updated_at, CURRENT_TIMESTAMP), "
-                "status = COALESCE(status, 'approved')"
+                "SET status = COALESCE(status, 'approved'), "
+                "created_at = COALESCE(created_at, CURRENT_TIMESTAMP), "
+                "updated_at = COALESCE(updated_at, CURRENT_TIMESTAMP)"
             )
         )
 
 
 def add_missing_product_report_columns():
-    """Development migration for report fields added after the first schema."""
+    """Adds the report status field if an older report table already exists."""
     with db.engine.begin() as connection:
         columns = {
             row[1]
-            for row in connection.execute(text("PRAGMA table_info(product_report)"))
+            for row in connection.execute(
+                text("PRAGMA table_info(product_report)")
+            )
         }
 
         if "status" not in columns:
@@ -176,120 +201,139 @@ def add_missing_product_report_columns():
             )
 
 
+def create_demo_admin():
+    """Creates/resets an assessment-only administrator account."""
+    admin = User.query.filter_by(email=DEMO_ADMIN_EMAIL).first()
+
+    password_hash = bcrypt.generate_password_hash(
+        DEMO_ADMIN_PASSWORD
+    ).decode("utf-8")
+
+    if admin is None:
+        admin = User(
+            first_name="Demo",
+            last_name="Administrator",
+            dob=datetime(2000, 1, 1).date(),
+            email=DEMO_ADMIN_EMAIL,
+            password=password_hash,
+            is_admin=True,
+        )
+        db.session.add(admin)
+    else:
+        admin.password = password_hash
+        admin.is_admin = True
+
+    db.session.commit()
+
+
+def create_sample_products():
+    if Product.query.count() > 0:
+        return
+
+    products = [
+        Product(
+            name="Matte Black Pen",
+            price=18,
+            category="stationery",
+            image="matte-black-pen.jpg",
+            description=(
+                "A sleek matte black pen designed for smooth writing "
+                "and a premium minimalist feel."
+            ),
+            stock_count=18,
+        ),
+        Product(
+            name="Woven Throw Blanket",
+            price=65,
+            category="home",
+            image="woven-throw-blanket.jpg",
+            description=(
+                "Soft woven cotton throw blanket perfect for adding "
+                "warmth and comfort to your home."
+            ),
+            stock_count=7,
+            is_sale=True,
+        ),
+        Product(
+            name="Concrete Bookends",
+            price=42,
+            category="home",
+            image="concrete-bookends.jpg",
+            description=(
+                "Modern sculptural bookends crafted with a minimalist "
+                "aesthetic for stylish organisation."
+            ),
+            stock_count=4,
+        ),
+        Product(
+            name="Linear Desk Lamp",
+            price=89,
+            category="lighting",
+            image="desk-lamp.jpg",
+            description=(
+                "An adjustable desk lamp with clean lines, ideal for "
+                "focused work and elegant spaces."
+            ),
+            stock_count=10,
+            is_new=True,
+        ),
+        Product(
+            name="Ceramic Mug Set",
+            price=35,
+            category="home",
+            image="ceramic-mug.jpg",
+            description=(
+                "Minimalist ceramic mugs designed for everyday coffee "
+                "and tea moments."
+            ),
+            stock_count=12,
+        ),
+        Product(
+            name="Minimalist Planner",
+            price=24,
+            category="stationery",
+            image="planner.jpg",
+            description=(
+                "Stay organised with a beautifully designed planner "
+                "focused on simplicity and productivity."
+            ),
+            stock_count=3,
+        ),
+        Product(
+            name="Pendant Light",
+            price=110,
+            category="lighting",
+            image="pendant-light.jpg",
+            description=(
+                "Elegant pendant lighting that blends modern design "
+                "with functional illumination."
+            ),
+            stock_count=6,
+        ),
+        Product(
+            name="Leather Notebook",
+            price=32,
+            category="stationery",
+            image="leather-notebook.jpg",
+            description=(
+                "Premium leather notebook with durable pages for "
+                "journaling, planning, and ideas."
+            ),
+            stock_count=0,
+        ),
+    ]
+
+    db.session.add_all(products)
+    db.session.commit()
+
+
 with app.app_context():
     db.create_all()
+    add_missing_user_columns()
     add_missing_product_columns()
     add_missing_product_report_columns()
-
-    if Product.query.count() == 0:
-        products = [
-            (
-                "Matte Black Pen",
-                18,
-                "stationery",
-                "matte-black-pen.jpg",
-                "A sleek matte black pen designed for smooth writing and a premium minimalist feel.",
-                18,
-                False,
-                False,
-            ),
-            (
-                "Woven Throw Blanket",
-                65,
-                "home",
-                "woven-throw-blanket.jpg",
-                "Soft woven cotton throw blanket perfect for adding warmth and comfort to your home.",
-                7,
-                False,
-                True,
-            ),
-            (
-                "Concrete Bookends",
-                42,
-                "home",
-                "concrete-bookends.jpg",
-                "Modern sculptural bookends crafted with a minimalist aesthetic for stylish organisation.",
-                4,
-                False,
-                False,
-            ),
-            (
-                "Linear Desk Lamp",
-                89,
-                "lighting",
-                "desk-lamp.jpg",
-                "An adjustable desk lamp with clean lines, ideal for focused work and elegant spaces.",
-                10,
-                True,
-                False,
-            ),
-            (
-                "Ceramic Mug Set",
-                35,
-                "home",
-                "ceramic-mug.jpg",
-                "Minimalist ceramic mugs designed for everyday coffee and tea moments.",
-                12,
-                False,
-                False,
-            ),
-            (
-                "Minimalist Planner",
-                24,
-                "stationery",
-                "planner.jpg",
-                "Stay organised with a beautifully designed planner focused on simplicity and productivity.",
-                3,
-                False,
-                False,
-            ),
-            (
-                "Pendant Light",
-                110,
-                "lighting",
-                "pendant-light.jpg",
-                "Elegant pendant lighting that blends modern design with functional illumination.",
-                6,
-                False,
-                False,
-            ),
-            (
-                "Leather Notebook",
-                32,
-                "stationery",
-                "leather-notebook.jpg",
-                "Premium leather notebook with durable pages for journaling, planning, and ideas.",
-                0,
-                False,
-                False,
-            ),
-        ]
-
-        db.session.add_all(
-            [
-                Product(
-                    name=name,
-                    price=price,
-                    category=category,
-                    image=image,
-                    description=description,
-                    stock_count=stock_count,
-                    is_new=is_new,
-                    is_sale=is_sale,
-                )
-                for (
-                    name,
-                    price,
-                    category,
-                    image,
-                    description,
-                    stock_count,
-                    is_new,
-                    is_sale,
-                ) in products
-            ]
-        )
-        db.session.commit()
+    create_demo_admin()
+    create_sample_products()
 
 
 def current_user():
@@ -298,7 +342,6 @@ def current_user():
 
 
 def product_image_url(product):
-    """Return the correct image location for default and customer products."""
     folder = "images/uploads" if product.seller_id else "images/products"
     return url_for("static", filename=f"{folder}/{product.image}")
 
@@ -310,6 +353,7 @@ def login_required(view):
             session.clear()
             flash("Please log in to continue.")
             return redirect(url_for("register"))
+
         return view(*args, **kwargs)
 
     return wrapped
@@ -384,12 +428,7 @@ def home():
     page = request.args.get("page", 1, type=int)
 
     query = (
-        Product.query.filter(Product.status == "approved")
-        .filter(
-            (Product.is_new.is_(True))
-            | (Product.is_sale.is_(True))
-            | (Product.id <= 5)
-        )
+        Product.query.filter_by(status="approved")
         .order_by(Product.id.desc())
     )
 
@@ -443,7 +482,7 @@ def product_detail(product_id):
     user = current_user()
 
     if product.status != "approved" and (
-        not user or not listing_is_editable(product, user)
+        user is None or not listing_is_editable(product, user)
     ):
         return page_not_found(None)
 
@@ -521,23 +560,23 @@ def add_to_cart(product_id):
 
 @app.route("/cart")
 def cart():
-    cart = session.get("cart", {})
+    cart_data = session.get("cart", {})
     cart_items = []
     total = 0
     changed = False
 
-    for key, quantity in list(cart.items()):
+    for key, quantity in list(cart_data.items()):
         product = db.session.get(Product, int(key))
 
         if product is None or product.stock_count <= 0:
-            cart.pop(key, None)
+            cart_data.pop(key, None)
             changed = True
             continue
 
         safe_quantity = min(quantity, product.stock_count)
 
         if safe_quantity != quantity:
-            cart[key] = safe_quantity
+            cart_data[key] = safe_quantity
             changed = True
 
         item_total = product.price * safe_quantity
@@ -552,7 +591,7 @@ def cart():
         )
 
     if changed:
-        session["cart"] = cart
+        session["cart"] = cart_data
         flash("Your cart was updated to match current stock availability.")
 
     return render_template("cart.html", cart_items=cart_items, total=total)
@@ -562,32 +601,32 @@ def cart():
 @login_required
 def update_cart(product_id):
     action = request.form.get("action")
-    cart = session.get("cart", {})
+    cart_data = session.get("cart", {})
     key = str(product_id)
     product = db.session.get(Product, product_id)
 
-    if product is None or key not in cart:
+    if product is None or key not in cart_data:
         flash("That product is no longer in your cart.")
 
     elif action == "increase":
-        if cart[key] < product.stock_count:
-            cart[key] += 1
+        if cart_data[key] < product.stock_count:
+            cart_data[key] += 1
         else:
             flash(f"Only {product.stock_count} of {product.name} are available.")
 
     elif action == "decrease":
-        cart[key] -= 1
+        cart_data[key] -= 1
 
-        if cart[key] <= 0:
-            cart.pop(key)
+        if cart_data[key] <= 0:
+            cart_data.pop(key)
 
     elif action == "remove":
-        cart.pop(key)
+        cart_data.pop(key)
 
     else:
         flash("That cart action is not valid.")
 
-    session["cart"] = cart
+    session["cart"] = cart_data
 
     return redirect(url_for("cart"))
 
@@ -595,25 +634,23 @@ def update_cart(product_id):
 @app.route("/checkout-simulate", methods=["POST"])
 @login_required
 def checkout_simulate():
-    cart = session.get("cart", {})
+    cart_data = session.get("cart", {})
 
-    if not cart:
+    if not cart_data:
         flash("Your cart is empty.")
         return redirect(url_for("shop"))
 
     products = []
     total = 0
 
-    for key, quantity in cart.items():
+    for key, quantity in cart_data.items():
         product = db.session.get(Product, int(key))
 
         if product is None or quantity < 1 or product.stock_count < quantity:
             available = product.stock_count if product else 0
-            product_name = product.name if product else "an item"
+            name = product.name if product else "an item"
 
-            flash(
-                f"Checkout stopped: {product_name} has only {available} available."
-            )
+            flash(f"Checkout stopped: {name} has only {available} available.")
             return redirect(url_for("cart"))
 
         products.append((product, quantity))
@@ -694,8 +731,7 @@ def sell():
 
         if created_today >= MAX_LISTINGS_PER_DAY:
             flash(
-                f"You can publish up to {MAX_LISTINGS_PER_DAY} listings each day. "
-                "Please try again tomorrow."
+                f"You can publish up to {MAX_LISTINGS_PER_DAY} listings per day."
             )
             return redirect(url_for("sell"))
 
@@ -721,9 +757,8 @@ def sell():
             and image
         ):
             flash(
-                "Use a 3–100 character name, a 20+ character description, "
-                "a valid category, price from $0.01 to $10,000, stock of 1–999, "
-                "and a JPG, PNG, or WebP image."
+                "Use a valid name, description, category, price, stock amount, "
+                "and JPG, PNG, or WebP image."
             )
             return redirect(url_for("sell"))
 
@@ -735,35 +770,19 @@ def sell():
             description=description,
             stock_count=stock_count,
             seller_id=user.id,
-            status="approved",
+            status="pending",
         )
 
         db.session.add(product)
         db.session.commit()
 
-        flash(
-            "Your listing is live in the selected category. "
-            "Keep its stock accurate as sales are recorded."
-        )
+        flash("Your listing was submitted for administrator review.")
 
         return redirect(url_for("account"))
-
-    today = datetime.utcnow().replace(
-        hour=0,
-        minute=0,
-        second=0,
-        microsecond=0,
-    )
-
-    remaining = MAX_LISTINGS_PER_DAY - Product.query.filter(
-        Product.seller_id == user.id,
-        Product.created_at >= today,
-    ).count()
 
     return render_template(
         "sell.html",
         categories=sorted(ALLOWED_CATEGORIES),
-        remaining=max(0, remaining),
         max_stock=MAX_STOCK_PER_LISTING,
     )
 
@@ -796,7 +815,7 @@ def edit_listing(product_id):
             and 0 < price <= MAX_PRICE_PER_LISTING
             and 0 <= stock_count <= MAX_STOCK_PER_LISTING
         ):
-            flash("Check the name, description, category, price, and stock limits.")
+            flash("Check the name, description, category, price, and stock.")
             return redirect(url_for("edit_listing", product_id=product.id))
 
         upload = request.files.get("image")
@@ -805,7 +824,7 @@ def edit_listing(product_id):
             image = save_listing_image(upload)
 
             if not image:
-                flash("Your replacement image must be a JPG, PNG, or WebP file.")
+                flash("Your replacement image must be JPG, PNG, or WebP.")
                 return redirect(url_for("edit_listing", product_id=product.id))
 
             product.image = image
@@ -815,11 +834,11 @@ def edit_listing(product_id):
         product.description = description
         product.price = price
         product.stock_count = stock_count
-        product.status = "approved"
+        product.status = "pending"
 
         db.session.commit()
 
-        flash("Listing updated.")
+        flash("Listing updated and sent for review.")
 
         return redirect(url_for("account"))
 
@@ -841,7 +860,7 @@ def archive_listing(product_id):
     else:
         product.status = "archived"
         db.session.commit()
-        flash("Listing archived. It is no longer visible in the shop.")
+        flash("Listing archived.")
 
     return redirect(url_for("account"))
 
@@ -857,22 +876,22 @@ def report_product(product_id):
     if product.seller_id == current_user().id:
         flash("You cannot report your own listing.")
 
-    elif reason not in {"misleading", "prohibited", "spam", "other"} or not (
-        10 <= len(details) <= 1000
-    ):
-        flash("Choose a reason and provide 10–1000 characters of detail.")
+    elif reason not in {"misleading", "prohibited", "spam", "other"}:
+        flash("Choose a valid report reason.")
+
+    elif not 10 <= len(details) <= 1000:
+        flash("Provide 10 to 1000 characters of detail.")
 
     else:
-        db.session.add(
-            ProductReport(
-                product_id=product.id,
-                reporter_id=current_user().id,
-                reason=reason,
-                details=details,
-                status="pending",
-            )
+        report = ProductReport(
+            product_id=product.id,
+            reporter_id=current_user().id,
+            reason=reason,
+            details=details,
+            status="pending",
         )
 
+        db.session.add(report)
         db.session.commit()
 
         flash("Thanks. Your report has been sent for review.")
@@ -914,8 +933,7 @@ def edit_account():
             new_password,
         ):
             flash(
-                "New password must be at least 8 characters and contain "
-                "letters and numbers."
+                "New password must have at least 8 characters, letters and numbers."
             )
             return redirect(url_for("edit_account"))
 
@@ -930,7 +948,6 @@ def edit_account():
             )
 
         db.session.commit()
-
         session["user_name"] = user.first_name
 
         flash("Your account details have been updated.")
@@ -961,8 +978,7 @@ def register():
             password,
         ):
             flash(
-                "Password must be at least 8 characters and contain letters "
-                "and numbers."
+                "Password must be at least 8 characters and contain letters and numbers."
             )
             return redirect(url_for("register"))
 
@@ -1006,14 +1022,12 @@ def register():
 
 @app.route("/login", methods=["POST"])
 def login():
-    user = User.query.filter_by(
-        email=request.form.get("login_email", "").strip().lower()
-    ).first()
+    email = request.form.get("login_email", "").strip().lower()
+    password = request.form.get("login_password", "")
 
-    if user and bcrypt.check_password_hash(
-        user.password,
-        request.form.get("login_password", ""),
-    ):
+    user = User.query.filter_by(email=email).first()
+
+    if user and bcrypt.check_password_hash(user.password, password):
         session["user_id"] = user.id
         session["user_name"] = user.first_name
 
@@ -1053,28 +1067,25 @@ def admin():
             or not description
             or category not in ALLOWED_CATEGORIES
             or not (0.01 <= price <= MAX_PRICE_PER_LISTING)
-            or stock_count < 0
+            or not (0 <= stock_count <= MAX_STOCK_PER_LISTING)
             or not image
         ):
-            flash(
-                "Enter a name, valid category, price from $0.01 to $10,000, "
-                "non-negative stock, image filename and description."
-            )
+            flash("Enter valid product information.")
             return redirect(url_for("admin"))
 
-        db.session.add(
-            Product(
-                name=name,
-                price=price,
-                category=category,
-                image=image,
-                description=description,
-                stock_count=stock_count,
-                is_new="is_new" in request.form,
-                is_sale="is_sale" in request.form,
-            )
+        product = Product(
+            name=name,
+            price=price,
+            category=category,
+            image=image,
+            description=description,
+            stock_count=stock_count,
+            is_new="is_new" in request.form,
+            is_sale="is_sale" in request.form,
+            status="approved",
         )
 
+        db.session.add(product)
         db.session.commit()
 
         flash(f'Product "{name}" was added to the store.')
@@ -1094,8 +1105,7 @@ def delete_product(product_id):
 
     if OrderItem.query.filter_by(product_id=product.id).first():
         flash(
-            "This product cannot be deleted because it appears in an order. "
-            "Keeping it preserves order history."
+            "This product cannot be deleted because it appears in an order."
         )
         return redirect(url_for("admin"))
 
@@ -1105,6 +1115,67 @@ def delete_product(product_id):
     flash(f'Product "{product.name}" was deleted.')
 
     return redirect(url_for("admin"))
+
+
+@app.route("/moderation")
+@admin_required
+def moderation():
+    pending = (
+        Product.query.filter_by(status="pending")
+        .order_by(Product.created_at.asc())
+        .all()
+    )
+
+    reports = (
+        ProductReport.query.filter_by(status="pending")
+        .order_by(ProductReport.created_at.asc())
+        .all()
+    )
+
+    return render_template(
+        "moderation.html",
+        pending=pending,
+        reports=reports,
+    )
+
+
+@app.route("/moderation/listing/<int:product_id>/<action>", methods=["POST"])
+@admin_required
+def moderate_listing(product_id, action):
+    product = Product.query.get_or_404(product_id)
+
+    if product.status != "pending":
+        flash("This listing has already been reviewed.")
+
+    elif action == "approve":
+        product.status = "approved"
+        db.session.commit()
+        flash(f'Listing "{product.name}" was approved.')
+
+    elif action == "reject":
+        product.status = "rejected"
+        db.session.commit()
+        flash(f'Listing "{product.name}" was rejected.')
+
+    else:
+        flash("That moderation action is not valid.")
+
+    return redirect(url_for("moderation"))
+
+
+@app.route("/moderation/report/<int:report_id>/resolve", methods=["POST"])
+@admin_required
+def resolve_report(report_id):
+    report = ProductReport.query.get_or_404(report_id)
+
+    if report.status == "pending":
+        report.status = "resolved"
+        db.session.commit()
+        flash("Report marked as resolved.")
+    else:
+        flash("This report has already been resolved.")
+
+    return redirect(url_for("moderation"))
 
 
 @app.errorhandler(404)
