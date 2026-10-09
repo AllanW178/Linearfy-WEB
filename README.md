@@ -1,3 +1,5 @@
+[Updated Note]: Please use 'pip install -r requirements.txt' to install all the Python modules/libraries, in order to use or visit the website. Try 'pip install -r requirements_back_up.txt' if the first version doesn't work.
+
 # Linearfy
 
 ## Level 3 Digital Technologies development record
@@ -95,7 +97,7 @@ The `Order` and `OrderItem` design is an important refinement because one order 
 - Only products with an `approved` status are shown to normal shoppers.
 - Product cards and detail pages show stock availability, including a clear sold-out state and a text-based low-stock indicator when fewer than five items remain.
 - Images use descriptive alternative text based on the product name.
-- Quantity controls have `aria-label` text, such as “Increase [product name] quantity”, so their purpose is clearer to screen-reader users.
+- Quantity controls have `aria-label` text, such as “Increase product_name quantity”, so their purpose is clearer to screen-reader users.
 - The notification container uses `aria-live="polite"`, allowing assistive technology to announce feedback without interrupting the user.
 - JavaScript respects a user's reduced-motion preference and shows content without animation when that preference is enabled.
 
