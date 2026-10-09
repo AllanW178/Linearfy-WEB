@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header hidden">
+    <div class="header-content">
+        <h1>Saved Items</h1>
+        <p>Products you may want to return to later.</p>
+    </div>
+</div>
+
+<section class="featured-products hidden">
+    <div class="product-grid shop-grid">
+        {% for item in items %}
+        <article class="product-card">
+            <div class="image-wrapper">
+                <img src="{{ url_for('static', filename='images/uploads/' + item.product.image if item.product.seller_id else 'images/products/' + item.product.image) }}" alt="{{ item.product.name }}" class="product-image">
+                <div class="quick-action">
+                    <a href="{{ url_for('product_detail', product_id=item.product.id) }}" class="btn-quick">View details</a>
+                </div>
+            </div>
+            <div class="product-info">
+                <p class="stock-status">{{ item.product.category|title }}</p>
+                <h3>{{ item.product.name }}</h3>
+                <p class="price">${{ '%.2f'|format(item.product.price) }}</p>
+                <form action="{{ url_for('toggle_wishlist', product_id=item.product.id) }}" method="POST">
+                    <button class="btn-text-danger" type="submit">Remove</button>
+                </form>
+            </div>
+        </article>
+        {% else %}
+        <div class="empty-state-box">
+            <p>You have not saved any products yet.</p>
+            <a href="{{ url_for('shop') }}" class="btn">Browse the shop</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
