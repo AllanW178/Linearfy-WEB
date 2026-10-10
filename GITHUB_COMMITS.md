@@ -1,37 +1,32 @@
 ## GitHub development history and what changed
 
-My GitHub commit titles are sometimes short because several uploads and file clean-ups were made through GitHub’s web interface. This section explains the purpose and outcome of those commits in more detail.
+Some of my commits to GitHub have been short due to multiple file clean ups and uploads being completed via the GitHub website. I will detail the purpose and result of these commits here.
 
-### 4 September 2026 - project setup and dependency management
+## 4 September 2026 - project setup and dependency management
+This commit provided a requirements file so another user could install the project dependencies into their system in the same way. I created a backup requirements file whilst also resolving the required packages for the project. I then inspected the list of required packages and removed any redundant packages and versions. This helped clarify which packages Linearfy requires (Flask, Flask-Bcrypt, Flask-SQLAlchemy) and simplified the installation process.
 
-I created the `requirements.txt` file so the project dependencies could be installed consistently on another computer. I also created a backup requirements file while resolving the correct package setup. After confirming the final dependency list, I removed duplicate and unnecessary versions. This made the setup process clearer and reduced confusion about which libraries Linearfy requires: Flask, Flask-Bcrypt, and Flask-SQLAlchemy.
+I also updated the README so that the installation process was in sync with the project files.
 
-I also updated the README during this stage so the installation instructions matched the project files.
+## 14 September 2026 - first complete project upload
+This commit contained the files required for the main Linearfy site (javascript, CSS, product images, templates and the Flask app). This provided a working version of the project on GitHub.
 
-### 14 September 2026 - first complete project upload
+The app included user registration and login, a shopping cart, a shared layout page, database persistence, browsing products and seller management. This provided a stable version of the project for future code to be compared against rather than having all changes in a single final commit.
 
-I uploaded the main Linearfy website files, including the Flask application, templates, CSS, JavaScript, and product images. This established the working base version of the project in GitHub.
+## 23 September 2026 - improving the application and cleaning the repository
+This commit also involved making changes to the Flask app in app.py to increase the reliability and functionality of the app. This included changes to admin and user roles, moderation and seller management, database functionality and stock control.
 
-The uploaded application included the main shopping experience: product browsing, user registration and login, shopping cart functionality, database storage, and a shared page layout. This meant later changes could be compared against a stable starting point rather than being added as one large final upload.
+This commit involved removing an old website directory in favour of the current Linearfy site. This avoided two separate versions of the project being present within the same repository and provided clarity as to what files were current.
 
-### 23 September 2026 - improving the application and cleaning the repository
+I also removed from the repository. The database file is created when the app is run. Having this within the repository increases the risk of test user details being exposed and decreases portability of the project. The database models, sample product creation and the code however remains within the project so the database can still be recreated.
 
-I updated `app.py` to improve the functionality and reliability of the Flask application. This development stage included improvements to areas such as stock handling, user and administrator permissions, seller listings, moderation, and database-connected features.
+I also updated the README to remove any redundant download links to clarify the current state of the project within the README rather than a previous state.
 
-I removed an old website folder after replacing it with the current Linearfy structure. This prevented two versions of the project from being stored in the same repository and made it clearer which files were current.
+## 9 October 2026 - final structure, documentation, and assessment evidence
+I removed an old Linearfy folder and uploaded the final project structure. This simplified navigation of the project and ensured that the current project images, static files, templates, and app files are all present in one location.
 
-I also removed `linearfy.db` from GitHub. The database file is generated locally when the application runs, so storing it in the repository could expose test account data and makes the repository less portable. The code, database models, and sample-product setup remain in the project, allowing the database to be recreated.
+I also replaced the previous README with a more detailed one which includes information about the project, target users, the technology used, the database used, security, testing, relevant implications and iterative development. This is to demonstrate the iterative development process of Linearfy which involved planning, testing, feedback and iteration.
 
-Finally, I updated the README to remove obsolete download instructions. This ensured that the documentation described the current project structure instead of an earlier version.
+## How testing influenced the development
+The most significant change was in respect to stock control. Initially it seemed that restricting the quantity controls in the frontend of the app were sufficient. Additional testing however revealed that stock could alter after an item has been added to the cart. In response to this a second stock check is now carried out when the order is placed through the Flask backend. This prevents negative stock levels being created and ensures that an order will not be completed if a requested quantity is no longer available. 
 
-### 9 October 2026 - final structure, documentation, and assessment evidence
-
-I reorganised the project files by removing an outdated Linearfy directory and uploading the final project structure. This made the repository easier to navigate and ensured that the current application files, templates, static files, and images were available in one clear location.
-
-I replaced the earlier README with a detailed version that explains the project purpose, target users, technologies, database structure, security measures, testing, relevant implications, and iterative improvements. This documentation provides evidence of how Linearfy developed through planning, testing, feedback, and refinement.
-
-### How testing influenced the development
-
-The most important improvement came from testing stock control. At first, limiting the quantity controls in the browser appeared sufficient. However, further testing showed that stock could change after an item had already been placed in the cart. I improved the application by adding a second stock check on the Flask server during checkout. This prevents an order from being completed if the requested quantity is no longer available, and prevents negative stock values.
-
-Other refinements included preventing duplicate wishlist entries through a database constraint, adding administrator-only access checks, creating a seller listing and moderation workflow, validating submitted data, and giving users clearer status feedback through notifications and stock indicators. These changes show that the final outcome was improved in response to testing rather than being created in one step.
+There was also enforcement of no duplicated items on the wish list using a constraint in the database, checking admin only features, implementation of a system for seller listings and moderation, input sanitisation, and better visualisation of the current status of items via stock and notifications. All of these enhancements demonstrate that the final system has been enhanced as a result of testing, and not implemented in one hit.
